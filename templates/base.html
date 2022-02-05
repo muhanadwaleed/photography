@@ -51,7 +51,7 @@
 		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
 		<aside id="colorlib-aside" role="complementary" class="js-fullheight text-center">
 
-			<h1 id="colorlib-logo"><a href={% url 'Home' %}><span class="img" style="background-image: url({{ main_image }});"></span>Mohanad Barghash</a></h1>
+			<h1 id="colorlib-logo"><a href={% url 'Home' %}><span class="img" style="background-image: url({{ main_image }});"></span>{{ profile.name }}</a></h1>
 			<nav id="colorlib-main-menu" role="navigation">
 				<ul>
 					<li class="colorlib-active"><a href={% url 'Home' %}>Home</a></li>
@@ -79,66 +79,40 @@
     <div id="colorlib-main">
          <footer class="ftco-footer ftco-bg-dark ftco-section">
                          <!--? instagram-social start -->
-                                         <div class="instagram-area fix">
-                        <div class="container-fluid p-0">
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="instagram-active owl-carousel">
-                                        <div class="single-instagram">
-                                            <img src={% static 'Barghash/images/image_8.jpg'%} alt="">
-                                            <a href="#"><i class="ti-instagram"></i></a>
-                                        </div>
-                                        <div class="single-instagram">
-                                            <img src={% static 'Barghash/images/image_4.jpg'%} alt="">
-                                            <a href="#"><i class="ti-instagram"></i></a>
-                                        </div>
-                                        <div class="single-instagram">
-                                            <img src={% static 'Barghash/images/me-profile.jpg'%} alt="">
-                                            <a href="#"><i class="ti-instagram"></i></a>
-                                        </div>
-                                        <div class="single-instagram">
-                                            <img src={% static 'Barghash/images/image_5.jpg'%} alt="">
-                                            <a href="#"><i class="ti-instagram"></i></a>
-                                        </div>
-                                        <div class="single-instagram">
-                                            <img src={% static 'Barghash/images/image_6.jpg'%} alt="">
-                                            <a href="#"><i class="ti-instagram"></i></a>
-                                        </div>
-                                        <div class="single-instagram">
-                                            <img src={% static 'Barghash/images/image_7.jpg'%} alt="">
-                                            <a href="#"><i class="ti-instagram"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{#                                         <div class="instagram-area fix">#}
+{#                        <div class="container-fluid p-0">#}
+{#                            <div class="row">#}
+{#                                <div class="col-xl-12">#}
+{#                                    <div class="instagram-active owl-carousel">#}
+{#                                        <div class="single-instagram">#}
+{#                                            <img src={% static 'Barghash/images/image_8.jpg'%} alt="">#}
+{#                                            <a href="#"><i class="ti-instagram"></i></a>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
                         <!-- instagram-social End -->
 
 	      <div class="container px-md-5">
 	        <div class="row mb-5">
-	          <div class="col-md">
-	            <div class="ftco-footer-widget mb-4 ml-md-4">
-	              <h2 class="ftco-heading-2">Recent Photos</h2>
-	              <ul class="list-unstyled photo">
-	                <li><a href="#" class="img" style="background-image: url({% static 'Barghash/images/image_1.jpg'%});"></a></li>
-	                <li><a href="#" class="img" style="background-image: url({% static 'Barghash/images/image_2.jpg'%});"></a></li>
-	                <li><a href="#" class="img" style="background-image: url({% static 'Barghash/images/image_3.jpg'%});"></a></li>
-	                <li><a href="#" class="img" style="background-image: url({% static 'Barghash/images/image_4.jpg'%});"></a></li>
-	                <li><a href="#" class="img" style="background-image: url({% static 'Barghash/images/image_5.jpg'%});"></a></li>
-	                <li><a href="#" class="img" style="background-image: url({% static 'Barghash/images/image_6.jpg'%});"></a></li>
-	              </ul>
-	            </div>
-	          </div>
 
 	          <div class="col-md">
 	            <div class="ftco-footer-widget mb-4">
-	            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+	            	<h2 class="ftco-heading-2">
+                        {% if profile.footer %} {{ profile.footer}}
+                     {% else %} HAVE A QUESTIONS?
+                        {% endif %}
+                    </h2>
 	            	<div class="block-23 mb-3">
 		              <ul>
-		                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-		                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-		                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                          {% if profile.location %}
+                            <li><span class="icon icon-map-marker"></span><span class="text"> {{ profile.location}}</span></li>  {% endif %}
+                          {% if profile.phone_number %}
+		                    <li><a href="tel:{{ profile.phone_number}}"><span class="icon icon-phone"></span><span class="text"> Call us at :{{ profile.phone_number}}</span></a></li> {% endif %}
+                          {% if profile.email %}
+                            <li><a href="mailto:{{ profile.email}} "><span class="icon icon-envelope"></span><span class="text">{{ profile.email}}</span></a></li> {% endif %}
 		              </ul>
 		            </div>
 	            </div>
@@ -148,7 +122,7 @@
 	          <div class="col-md-12">
 
 	            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-	  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved Mohanad Barghash </p>
+	  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved {{ profile.name }} </p>
 	          </div>
 	        </div>
 	      </div>
