@@ -5,3 +5,5 @@ from Barghash.models import *
 admin.site.register(Profile)
 admin.site.register(Instagram)
 admin.site.register(AboutPage)
+admin.site.register(Category)
+admin.site.register(Post)

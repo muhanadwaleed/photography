@@ -29,6 +29,8 @@ urlpatterns = [
     path('about/', About.as_view(), name='About'),
     path('services/', Services.as_view(), name='Services'),
     path('blog/', Blog.as_view(), name='Blog'),
+    path('blog/<str:category>/', CategoryBlog.as_view(), name='CategoryBlog'),
+    path('post/', BlogPost.as_view(), name='BlogPost'),
     path('contact/', Contact.as_view(), name='Contact'),
     path('insta/', TemplateView.as_view(template_name='index.html', extra_context={
         "instagram_profile_name": "barghash.photography"
