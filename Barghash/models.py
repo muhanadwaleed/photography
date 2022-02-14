@@ -1,5 +1,6 @@
 import os
 
+from colorfield.fields import ColorField
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
@@ -25,7 +26,8 @@ class Profile(models.Model):
     title = models.CharField(null=True, blank=True, max_length=1500)
     jop = models.CharField(null=True, blank=True, max_length=1500)
     footer = models.TextField(null=True, blank=True, max_length=1500)
-    color = models.CharField(null=True, blank=True, max_length=1500, default='#CCB78F')
+    # color = models.CharField(null=True, blank=True, max_length=1500, default='#CCB78F')
+    color = ColorField(default='#CCB78F')
 
     def __str__(self):
         return self.name
