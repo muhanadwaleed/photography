@@ -212,14 +212,14 @@
     <script>
     function readmore(id){
 
-        let d = document.getElementById(id);
+        let caption = document.getElementById(id);
         let btnText = document.getElementById("btn"+id);
-        if (d.style.display=="unset") {
-            d.setAttribute("style", "display:-webkit-box;");
+        if (caption.style.display=="unset") {
+            caption.setAttribute("style", "display:-webkit-box;");
                 btnText.innerHTML = "Read More "+"<span class='ion-ios-arrow-forward'></span>";
         }
         else {
-            d.setAttribute("style", "display:unset;");
+            caption.setAttribute("style", "display:unset;");
                 btnText.innerHTML = "<span class='ion-ios-arrow-back'></span>"+" Read Less";
 
         }

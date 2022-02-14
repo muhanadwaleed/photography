@@ -30,19 +30,23 @@
     <link rel="stylesheet" href="{% static 'Barghash/css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'Barghash/css/style.css' %}">
 
-        {% block extracss %}{% endblock %}
+
     <!-- CSS here -->
 
     <link rel="stylesheet" href="{% static 'footer/assets/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'footer/assets/css/style.css' %}">
-
 <style>
    div.instagram-area.fix {
         padding-bottom: 20px;
         margin-top: -83px;
         max-height: 250px;
    }
+   .ftco-bread{
+            background-color: {{ profile.color }} !important;
+        }
 </style>
+{% block extracss %}{% endblock %}
+
 
 {% block head %}{% endblock %}
 </head>

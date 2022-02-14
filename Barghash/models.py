@@ -25,6 +25,7 @@ class Profile(models.Model):
     title = models.CharField(null=True, blank=True, max_length=1500)
     jop = models.CharField(null=True, blank=True, max_length=1500)
     footer = models.TextField(null=True, blank=True, max_length=1500)
+    color = models.CharField(null=True, blank=True, max_length=1500, default='#CCB78F')
 
     def __str__(self):
         return self.name
