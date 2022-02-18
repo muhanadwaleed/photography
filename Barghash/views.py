@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 import instaloader
 import re
@@ -100,6 +101,7 @@ class Blog(View):
         posts = Post.objects.all().order_by('-date')
         items = list(posts)
         categories = Category.objects.all()
+        text = '0'
 
         return render(request, "blog.html", {
             'main_image': profile.profile_image.url,
@@ -107,6 +109,7 @@ class Blog(View):
             'posts': posts,
             'Suggested_Articles': random.sample(items, 3),
             'categories': categories,
+            'search_text': text,
 
         })
 
@@ -119,6 +122,7 @@ class CategoryBlog(View):
         categories = Category.objects.all()
         category_obj = Category.objects.get(category_name=category)
         categored_posts = Post.objects.filter(category=category_obj).order_by('-date')
+        text = '0'
 
         return render(request, "blog.html", {
             'main_image': profile.profile_image.url,
@@ -126,6 +130,44 @@ class CategoryBlog(View):
             'posts': categored_posts,
             'Suggested_Articles': random.sample(items, 3),
             'categories': categories,
+            'search_text': text,
+
+        })
+
+
+class SearchResults(View):
+
+    def get(self, request):
+        search_text = self.request.GET.get('q')
+        date_from = self.request.GET.get('date_from')
+        date_to = self.request.GET.get('date_to')
+        profile = Profile.objects.first()
+        object_list = Post.objects.filter(
+            Q(title__icontains=search_text) | Q(caption__icontains=search_text) | Q(category__category_name__icontains=search_text)
+        ).order_by('-date')
+
+        if date_from and date_to:
+            object_list = object_list.filter(date__range=[date_from, date_to])
+        elif date_from:
+                object_list = object_list.filter(date__gte=date_from)
+        elif date_to:
+            object_list = object_list.filter(date__lte=date_to)
+
+        posts = Post.objects.all().order_by('-date')
+        items = list(posts)
+        categories = Category.objects.all()
+        text = '0'
+        if object_list.count() == 0:
+            text = search_text
+
+
+        return render(request, "blog.html", {
+            'main_image': profile.profile_image.url,
+            'profile': profile,
+            'posts': object_list,
+            'Suggested_Articles': random.sample(items, 3),
+            'categories': categories,
+            'search_text':text,
 
         })
 

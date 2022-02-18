@@ -1,7 +1,7 @@
 import os
 
 from colorfield.fields import ColorField
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -35,7 +35,10 @@ class Profile(models.Model):
 
 class Instagram(models.Model):
     name = models.CharField(max_length=300, null=True, blank=True)
-    numper_of_posts = models.IntegerField(null=True, blank=True, default=10)
+    numper_of_posts = models.IntegerField(null=True, blank=True, default=10,validators=[
+            MaxValueValidator(11),
+            MinValueValidator(0)
+        ])
 
     def __str__(self):
         return self.name
@@ -77,7 +80,7 @@ class Post(models.Model):
                                  FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
 
     def __str__(self):
-        return str(str(self.title) + ' ' + str(self.date))
+        return str('Title: ' + str(self.title) + ' |  Date: ' + str(self.date.date())) + ' |  Category: ' +str(self.category.category_name)
 
     def wordcounter(self):
         if len(self.caption) >= 200:
@@ -93,8 +96,7 @@ class Post(models.Model):
 
 @receiver(pre_delete, sender=Post)
 def post_delete_file(sender, instance=None, **kwargs):
-    file_upload_dir = os.path.join(MEDIA_ROOT, instance.video.name)
-    if os.path.exists(file_upload_dir):
-        os.remove(file_upload_dir)
-
-    # Do something
+    if instance.video:
+        file_upload_dir = os.path.join(MEDIA_ROOT, instance.video.name)
+        if os.path.exists(file_upload_dir):
+            os.remove(file_upload_dir)

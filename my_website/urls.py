@@ -21,6 +21,8 @@ from django.views.generic import TemplateView
 
 from Barghash.views import *
 
+app_name = 'my_website'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Home.as_view(), name='Home'),
@@ -30,6 +32,7 @@ urlpatterns = [
     path('services/', Services.as_view(), name='Services'),
     path('blog/', Blog.as_view(), name='Blog'),
     path('blog/<str:category>/', CategoryBlog.as_view(), name='CategoryBlog'),
+    path('blogs/search/', SearchResults.as_view(), name='search_results'),
     path('post/', BlogPost.as_view(), name='BlogPost'),
     path('contact/', Contact.as_view(), name='Contact'),
     path('insta/', TemplateView.as_view(template_name='index.html', extra_context={
