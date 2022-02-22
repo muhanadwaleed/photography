@@ -19,6 +19,10 @@
         .blog-entry .img {
             height: 400px;
         }
+        .mfp-bg {
+            background: {{ profile.color }};
+            filter: brightness(0.3);
+        }
 
     </style>
 
@@ -94,16 +98,21 @@
 			    			    <div class="col-md-12" id="post{{ post.id }}">
 			    				<div class="blog-entry ftco-animate d-md-flex">
                                         {% if post.category.category_name != 'Video' %}
-									    	<a href="single.html" class="img img-2" style="background-image: url({% static post.image %});"></a>
-                                        {% else %}
-                                        <video class="img img-2" controls style="height:unset;margin-bottom: 40px;">
-                                             {% if post.video %}
-                                                     <source src="{{ post.video.url }}"type="video/mp4">
-                                                 {% else %}
-                                                     <source src="{% static post.videoUrl %}"type="video/mp4">
-                                             {% endif %}
+									    	<a href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.image %});"></a>
+                                          {% else %}
+                                                {% if  post.videoUrl %}
+                                                    <video class="img img-2" controls style="height:unset;margin-bottom: 40px;">
+                                                         {% if post.video %}
+                                                                 <source src="{{ post.video.url }}"type="video/mp4">
+                                                         {% else %}
+                                                                 <source src="{% static post.videoUrl %}"type="video/mp4">
+                                                         {% endif %}
+                                                    </video>
+                                                {% else %}
+                                                           <a  href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end"  style="background-image: url({% static post.image %});"></a>
+                                                {% endif %}
 
-                                        </video>
+
                                         {% endif %}
 										<div class="text text-2 p-4">
 				              <h3 class="mb-2"><a href="single.html">{{ post.title }}</a></h3>
@@ -201,7 +210,7 @@
 	              <div class="block-21 mb-4 d-flex">
 	                <a class="blog-img mr-4" style="background-image: url({% static post.image %});"></a>
 	                <div class="text">
-	                  <h3 class="heading"><a href="#post{{ post.id }}">{{ post.title }}</a></h3>
+	                  <h3 class="heading"><a href="{% url 'Blog' %}#post{{ post.id }}">{{ post.title }}</a></h3>
 	                  <div class="meta">
 	                    <div><a href="#"><span class="icon-calendar"></span>{{ post.date }}</a></div>
 	                    <div><a href="#"><span class="icon-person"></span>{{ profile.name }}</a></div>
@@ -240,23 +249,20 @@
 {#	              </form>#}
 {#	            </div>#}
 
-	            <div class="sidebar-box ftco-animate">
-	            	<h3 class="sidebar-heading">Archives</h3>
-	              <ul class="categories">
-	              	<li><a href="#">Decob14 2018 <span>(10)</span></a></li>
-	                <li><a href="#">September 2018 <span>(6)</span></a></li>
-	                <li><a href="#">August 2018 <span>(8)</span></a></li>
-	                <li><a href="#">July 2018 <span>(2)</span></a></li>
-	                <li><a href="#">June 2018 <span>(7)</span></a></li>
-	                <li><a href="#">May 2018 <span>(5)</span></a></li>
-	              </ul>
-	            </div>
+{#	            <div class="sidebar-box ftco-animate">#}
+{#	            	<h3 class="sidebar-heading">Archives</h3>#}
+{#	              <ul class="categories">#}
+{#	              	<li><a href="#">Decob14 2018 <span>(10)</span></a></li>#}
+{#	                <li><a href="#">September 2018 <span>(6)</span></a></li>#}
+{#	                <li><a href="#">August 2018 <span>(8)</span></a></li>#}
+{#	                <li><a href="#">July 2018 <span>(2)</span></a></li>#}
+{#	                <li><a href="#">June 2018 <span>(7)</span></a></li>#}
+{#	                <li><a href="#">May 2018 <span>(5)</span></a></li>#}
+{#	              </ul>#}
+{#	            </div>#}
 
 
-	            <div class="sidebar-box ftco-animate">
-	              <h3 class="sidebar-heading">Paragraph</h3>
-	              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem necessitatibus voluptate quod mollitia delectus aut.</p>
-	            </div>
+
 	          </div><!-- END COL -->
 	    		</div>
 	    	</div>

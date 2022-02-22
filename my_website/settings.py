@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django_instagram',
     'sorl.thumbnail',
     'kvstore',
+    'rest_framework',
     'colorfield',
+    'django_extensions',
 
 ]
 

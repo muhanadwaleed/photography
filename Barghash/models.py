@@ -4,7 +4,6 @@ from colorfield.fields import ColorField
 from django.core.validators import FileExtensionValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 
-
 # Create your models here.
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
@@ -26,7 +25,6 @@ class Profile(models.Model):
     title = models.CharField(null=True, blank=True, max_length=1500)
     jop = models.CharField(null=True, blank=True, max_length=1500)
     footer = models.TextField(null=True, blank=True, max_length=1500)
-    # color = models.CharField(null=True, blank=True, max_length=1500, default='#CCB78F')
     color = ColorField(default='#CCB78F')
 
     def __str__(self):
@@ -35,10 +33,10 @@ class Profile(models.Model):
 
 class Instagram(models.Model):
     name = models.CharField(max_length=300, null=True, blank=True)
-    numper_of_posts = models.IntegerField(null=True, blank=True, default=10,validators=[
-            MaxValueValidator(11),
-            MinValueValidator(0)
-        ])
+    numper_of_posts = models.IntegerField(null=True, blank=True, default=10, validators=[
+        MaxValueValidator(11),
+        MinValueValidator(0)
+    ])
 
     def __str__(self):
         return self.name
@@ -69,6 +67,28 @@ class Category(models.Model):
         return count
 
 
+class ContactUs(models.Model):
+    address = models.CharField(max_length=1500, null=True, blank=True)
+    phone = models.CharField(max_length=300, null=True, blank=True)
+    email = models.CharField(max_length=300, null=True, blank=True)
+    website = models.CharField(max_length=300, null=True, blank=True)
+
+    def __str__(self):
+        return str('Contact Us')
+
+
+class Messages(models.Model):
+    messages_number = models.AutoField(primary_key=True)
+    date = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    name = models.CharField(max_length=1500, null=True, blank=True)
+    contact_way = models.CharField(max_length=300, null=True, blank=True)
+    subject = models.CharField(max_length=1500, null=True, blank=True)
+    message = models.TextField(max_length=50000, null=True, blank=True)
+
+    def __str__(self):
+        return str('message ( ' + str(self.messages_number) + ' ) From :' + str(self.name) + ' send in : ' + str(self.date.date()))
+
+
 class Post(models.Model):
     title = models.CharField(max_length=300, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
@@ -80,7 +100,8 @@ class Post(models.Model):
                                  FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
 
     def __str__(self):
-        return str('Title: ' + str(self.title) + ' |  Date: ' + str(self.date.date())) + ' |  Category: ' +str(self.category.category_name)
+        return str('Title: ' + str(self.title) + ' |  Date: ' + str(self.date.date())) + ' |  Category: ' + str(
+            self.category.category_name)
 
     def wordcounter(self):
         if len(self.caption) >= 200:
@@ -90,8 +111,10 @@ class Post(models.Model):
 
     def videoUrl(self):
         vid = str(self.image)
-        return vid.replace('.jpg', '.mp4')
-
+        if os.path.exists('static/' + vid.replace('.jpg', '.mp4')):
+            return vid.replace('.jpg', '.mp4')
+        else:
+            return False
 
 
 @receiver(pre_delete, sender=Post)

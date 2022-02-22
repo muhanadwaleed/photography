@@ -4,6 +4,17 @@
 
     {% block page-title %}Collection{% endblock %}
 
+    {% block extracss %}
+        <style>
+        .mfp-bg {
+            background: {{ profile.color }};
+            filter: brightness(0.3);
+        }
+
+
+        </style>
+    {% endblock %}
+
 {% block body %}
 
 	<div id="colorlib-page">
