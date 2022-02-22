@@ -3,6 +3,7 @@ from django.shortcuts import render
 import instaloader
 import re
 import random
+from rest_framework.views import APIView
 
 # Create your views here.
 from django.views import View
@@ -143,13 +144,14 @@ class SearchResults(View):
         date_to = self.request.GET.get('date_to')
         profile = Profile.objects.first()
         object_list = Post.objects.filter(
-            Q(title__icontains=search_text) | Q(caption__icontains=search_text) | Q(category__category_name__icontains=search_text)
+            Q(title__icontains=search_text) | Q(caption__icontains=search_text) | Q(
+                category__category_name__icontains=search_text)
         ).order_by('-date')
 
         if date_from and date_to:
             object_list = object_list.filter(date__range=[date_from, date_to])
         elif date_from:
-                object_list = object_list.filter(date__gte=date_from)
+            object_list = object_list.filter(date__gte=date_from)
         elif date_to:
             object_list = object_list.filter(date__lte=date_to)
 
@@ -160,14 +162,13 @@ class SearchResults(View):
         if object_list.count() == 0:
             text = search_text
 
-
         return render(request, "blog.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
             'posts': object_list,
             'Suggested_Articles': random.sample(items, 3),
             'categories': categories,
-            'search_text':text,
+            'search_text': text,
 
         })
 
@@ -185,10 +186,28 @@ class BlogPost(View):
 class Contact(View):
     def get(self, request):
         profile = Profile.objects.first()
+        contact_details = ContactUs.objects.first()
         return render(request, "contact.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
+            'contact_details': contact_details,
 
+        })
+
+
+class Message(APIView):
+    def get(self, request):
+        name = request.GET.get('Name', None)
+        contact_way = request.GET.get('PhoneOrEmail', None)
+        subject = request.GET.get('Subject', None)
+        message_text = request.GET.get('Message', None)
+        message = Messages.objects.create(name=name, contact_way=contact_way, subject=subject, message=message_text)
+        profile = Profile.objects.first()
+        contact_details = ContactUs.objects.first()
+        return render(request, "contact.html", {
+            'main_image': profile.profile_image.url,
+            'profile': profile,
+            'contact_details': contact_details,
         })
 
 
