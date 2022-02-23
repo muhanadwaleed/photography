@@ -35,6 +35,7 @@ urlpatterns = [
     path('blogs/search/', SearchResults.as_view(), name='search_results'),
     path('post/', BlogPost.as_view(), name='BlogPost'),
     path('contact/', Contact.as_view(), name='Contact'),
+    path('Message-Read/', MessageRead.as_view(), name='Message-Read'),
     path('api/send-Message/', Message.as_view(), name='Message'),
     path('insta/', TemplateView.as_view(template_name='index.html', extra_context={
         "instagram_profile_name": "barghash.photography"

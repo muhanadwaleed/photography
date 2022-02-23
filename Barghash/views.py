@@ -4,6 +4,7 @@ import instaloader
 import re
 import random
 from rest_framework.views import APIView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 from django.views import View
@@ -217,5 +218,18 @@ class Test(View):
         return render(request, "test.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
+
+        })
+
+
+class MessageRead(LoginRequiredMixin, View):
+    def get(self, request):
+        profile = Profile.objects.first()
+        messages = Messages.objects.all()
+        print(Messages.objects.first().messages_number)
+        return render(request, "messages.html", {
+            'main_image': profile.profile_image.url,
+            'profile': profile,
+            'messages': messages,
 
         })

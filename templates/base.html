@@ -64,6 +64,9 @@
 					<li {% if 'services' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href={% url 'Services' %}>My Services</a></li>
 					<li {% if 'blog' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href={% url 'Blog' %}>Blog</a></li>
 					<li {% if 'contact' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Contact' %}>Contact</a></li>
+                    {% if request.user.is_authenticated %}
+					<li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Message-Read' %}>Messages</a></li>
+                    {% endif %}
 				</ul>
 			</nav>
 
