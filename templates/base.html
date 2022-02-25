@@ -47,6 +47,21 @@
 </style>
 {% block extracss %}{% endblock %}
 
+<style>
+    .h2 {
+        font-size: 15px;
+   width: 100%;
+   text-align: center;
+   border-bottom: 1px solid {{ profile.color }};
+   line-height: 0.1em;
+   margin: 20% 0 10% 0px;
+    }
+
+    .h2 span {
+        background:#f5f5f5;
+        padding:0 10px;
+    }
+</style>
 
 {% block head %}{% endblock %}
 </head>
@@ -65,22 +80,24 @@
 					<li {% if 'blog' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href={% url 'Blog' %}>Blog</a></li>
 					<li {% if 'contact' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Contact' %}>Contact</a></li>
                     {% if request.user.is_authenticated %}
+                        <h4 class="h2"><span>Admin</span></h4>
 					<li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Message-Read' %}>Messages</a></li>
+					<li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href='{% url 'admin:index' %}'>Admin Dashboard</a></li>
                     {% endif %}
 				</ul>
 			</nav>
 
-			<div class="colorlib-footer">
-				<h3>Newsletter</h3>
-				<div class="d-flex justify-content-center">
-					<form action="#" class="colorlib-subscribe-form">
-            <div class="form-group d-flex">
-            	<div class="icon"><span class="icon-paper-plane"></span></div>
-              <input type="text" class="form-control" placeholder="Enter Email Address">
-            </div>
-          </form>
-				</div>
-			</div>
+{#			<div class="colorlib-footer">#}
+{#				<h3>Newsletter</h3>#}
+{#				<div class="d-flex justify-content-center">#}
+{#					<form action="#" class="colorlib-subscribe-form">#}
+{#            <div class="form-group d-flex">#}
+{#            	<div class="icon"><span class="icon-paper-plane"></span></div>#}
+{#              <input type="text" class="form-control" placeholder="Enter Email Address">#}
+{#            </div>#}
+{#          </form>#}
+{#				</div>#}
+{#			</div>#}
 		</aside> <!-- END COLORLIB-ASIDE -->
 {% block body %}{% endblock %}
     <div id="colorlib-main">

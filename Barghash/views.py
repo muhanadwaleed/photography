@@ -89,10 +89,12 @@ class About(View):
 
 class Services(View):
     def get(self, request):
+        services = Service.objects.all()
         profile = Profile.objects.first()
         return render(request, "services.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
+            'services': services,
 
         })
 
@@ -100,7 +102,10 @@ class Services(View):
 class Blog(View):
     def get(self, request):
         profile = Profile.objects.first()
-        posts = Post.objects.all().order_by('-date')
+        if request.user.is_authenticated:
+          posts = Post.objects.all().order_by('-date')
+        else:
+          posts = Post.objects.filter(archive=False).order_by('-date')
         items = list(posts)
         categories = Category.objects.all()
         text = '0'
@@ -119,11 +124,14 @@ class Blog(View):
 class CategoryBlog(View):
     def get(self, request, category):
         profile = Profile.objects.first()
-        posts = Post.objects.all().order_by('-date')
+        if request.user.is_authenticated:
+            posts = Post.objects.all().order_by('-date')
+        else:
+            posts = Post.objects.filter(archive=False).order_by('-date')
         items = list(posts)
         categories = Category.objects.all()
         category_obj = Category.objects.get(category_name=category)
-        categored_posts = Post.objects.filter(category=category_obj).order_by('-date')
+        categored_posts = Post.objects.filter(category=category_obj, archive=False).order_by('-date')
         text = '0'
 
         return render(request, "blog.html", {
@@ -144,10 +152,16 @@ class SearchResults(View):
         date_from = self.request.GET.get('date_from')
         date_to = self.request.GET.get('date_to')
         profile = Profile.objects.first()
-        object_list = Post.objects.filter(
-            Q(title__icontains=search_text) | Q(caption__icontains=search_text) | Q(
-                category__category_name__icontains=search_text)
-        ).order_by('-date')
+        if request.user.is_authenticated:
+            object_list = Post.objects.filter(
+                Q(title__icontains=search_text) | Q(caption__icontains=search_text) | Q(
+                    category__category_name__icontains=search_text)
+            ).order_by('-date')
+        else:
+            object_list = Post.objects.filter(
+                Q(title__icontains=search_text) | Q(caption__icontains=search_text) | Q(
+                    category__category_name__icontains=search_text), archive=False
+            ).order_by('-date')
 
         if date_from and date_to:
             object_list = object_list.filter(date__range=[date_from, date_to])
@@ -156,7 +170,9 @@ class SearchResults(View):
         elif date_to:
             object_list = object_list.filter(date__lte=date_to)
 
-        posts = Post.objects.all().order_by('-date')
+
+
+        posts = Post.objects.filter(archive=False).order_by('-date')
         items = list(posts)
         categories = Category.objects.all()
         text = '0'
@@ -212,6 +228,18 @@ class Message(APIView):
         })
 
 
+class Archive(LoginRequiredMixin,APIView):
+    def get(self, request):
+        print(request.GET)
+        archive = request.GET.get('archived', None)
+        id = request.GET.get('id', None)
+        post = Post.objects.get(id=id)
+        print('befor', post.archive)
+        post.archive = archive
+        post.save()
+        print('after', post.archive)
+
+
 class Test(View):
     def get(self, request):
         profile = Profile.objects.first()
@@ -226,10 +254,29 @@ class MessageRead(LoginRequiredMixin, View):
     def get(self, request):
         profile = Profile.objects.first()
         messages = Messages.objects.all()
-        print(Messages.objects.first().messages_number)
         return render(request, "messages.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
             'messages': messages,
 
         })
+
+
+class PostAdmin(LoginRequiredMixin, View):
+    def get(self, request):
+        profile = Profile.objects.first()
+        posts = Post.objects.all().order_by('-date')
+        items = list(posts)
+        categories = Category.objects.all()
+        text = '0'
+
+        return render(request, "post-admin.html", {
+            'main_image': profile.profile_image.url,
+            'profile': profile,
+            'posts': posts,
+            'Suggested_Articles': random.sample(items, 3),
+            'categories': categories,
+            'search_text': text,
+
+        })
+

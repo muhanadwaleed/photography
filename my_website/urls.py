@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
@@ -24,7 +24,7 @@ from Barghash.views import *
 app_name = 'my_website'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name="Admin"),
     path('', Home.as_view(), name='Home'),
     path('collection/', Collection.as_view(), name='Collection'),
     path('test/', Test.as_view(), name='test'),
@@ -37,6 +37,7 @@ urlpatterns = [
     path('contact/', Contact.as_view(), name='Contact'),
     path('Message-Read/', MessageRead.as_view(), name='Message-Read'),
     path('api/send-Message/', Message.as_view(), name='Message'),
+    path('api/archive/', Archive.as_view(), name='Message'),
     path('insta/', TemplateView.as_view(template_name='index.html', extra_context={
         "instagram_profile_name": "barghash.photography"
     })),

@@ -8,13 +8,15 @@ from Barghash.models import *
 class PostAdmin(admin.ModelAdmin):
     ordering = ['-date']
 
+
 class MessagesAdmin(admin.ModelAdmin):
-    readonly_fields = ['name','subject','message','contact_way']
+    readonly_fields = ['name', 'subject', 'message', 'contact_way']
 
 
 admin.site.register(Profile)
+admin.site.register(Service)
 admin.site.register(ContactUs)
-admin.site.register(Messages,MessagesAdmin)
+admin.site.register(Messages, MessagesAdmin)
 admin.site.register(Instagram)
 admin.site.register(AboutPage)
 admin.site.register(Category)

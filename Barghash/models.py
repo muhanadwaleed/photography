@@ -8,7 +8,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from my_website.settings import MEDIA_ROOT
-
+# from faicon.fields import FAIconField
 
 class Profile(models.Model):
     name = models.CharField(null=True, blank=True, max_length=1500)
@@ -86,7 +86,8 @@ class Messages(models.Model):
     message = models.TextField(max_length=50000, null=True, blank=True)
 
     def __str__(self):
-        return str('message ( ' + str(self.messages_number) + ' ) From :' + str(self.name) + ' send in : ' + str(self.date.date()))
+        return str('message ( ' + str(self.messages_number) + ' ) From :' + str(self.name) + ' send in : ' + str(
+            self.date.date()))
 
 
 class Post(models.Model):
@@ -95,6 +96,7 @@ class Post(models.Model):
     caption = models.TextField(null=True, blank=True, max_length=1500, default="")
     date = models.DateTimeField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
+    archive = models.BooleanField(null=True, blank=True, default=False)
     video = models.FileField(upload_to='videos_uploaded', null=True, blank=True,
                              validators=[
                                  FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
@@ -123,3 +125,20 @@ def post_delete_file(sender, instance=None, **kwargs):
         file_upload_dir = os.path.join(MEDIA_ROOT, instance.video.name)
         if os.path.exists(file_upload_dir):
             os.remove(file_upload_dir)
+
+
+class Service(models.Model):
+    # icon = FAIconField(null=True,blank=True)
+    icon_image = models.ImageField(null=True, blank=True)
+    title = models.CharField(max_length=200, null=True, blank=True)
+    description = models.CharField(max_length=300, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.title)
+
+    # # style: fas, icon: camera
+    # # fas icon-camera
+    # def icons(self):
+    #     before = self.icon.icon
+    #     main = str(self.icon).split(':')[1].replace(',', ' ')
+    #     return str(main+'-'+before)
