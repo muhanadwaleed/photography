@@ -9,6 +9,9 @@
     .btn.btn-primary {
         background: {{ profile.color }};
     }
+    .btn::before {
+        background: unset;
+    }
 
     .custom-center {
         justify-content: center;
@@ -25,7 +28,7 @@
 			<section class="ftco-section ftco-bread">
 				<div class="container">
 					<div class="row no-gutters slider-text justify-content-center align-items-center">
-	          <div class="col-md-8 ftco-animate">
+	          <div class="col-md-8 ftco-animate" style="margin-right: 27%;">
 	            <p class="breadcrumbs"><span class="mr-2"><a href={% url 'Home' %}>Home</a></span> <span>Messages</span></p>
 	            <h1 class="bread">Messages</h1>
 	          </div>
@@ -54,7 +57,7 @@
                 <div class="card" style="width: 18rem;margin-bottom: 15px;">
 {#                  <img class="card-img-top" src="{{ message.image.url}}" alt="Card image cap">#}
                   <div class="card-body">
-                    <h5 class="card-title">({{ message.messages_number }}) {{ message.name }}</h5>
+                    <h5 class="card-title">( {{ message.messages_number }} ) {{ message.name }}</h5>
                     <h5 class="card-title">{{ messages.subject }}</h5>
                     <p class="card-text"> - {{ message.date.date}}<br> {{ message.message }}</p>
                   </div>

@@ -24,6 +24,10 @@
             filter: brightness(0.3);
         }
 
+        .btn.btn-primary:hover {
+            color: white;
+        }
+
     </style>
 
 
@@ -40,6 +44,9 @@
 
         .btn::before {
             background: {{ profile.color }};
+        }
+        .removebefore::before {
+            background: unset;
         }
         .btn.btn-primary {
             margin-left: 2%;
@@ -61,9 +68,9 @@
 			<section class="ftco-section ftco-bread">
 				<div class="container">
 					<div class="row no-gutters slider-text justify-content-center align-items-center">
-	          <div class="col-md-8 ftco-animate">
+	          <div class="col-md-8 ftco-animate" style="margin-right: auto;">
 	            <p class="breadcrumbs"><span class="mr-2"><a href={% url 'Home' %}>Home</a></span> <span>Blog</span></p>
-	            <h1 class="bread">Read Our Blog</h1>
+	            <h1 class="bread">Enjoy With My Blog</h1>
 	          </div>
 	        </div>
 				</div>
@@ -98,7 +105,11 @@
 			    			    <div class="col-md-12" id="post{{ post.id }}">
 			    				<div class="blog-entry ftco-animate d-md-flex">
                                         {% if post.category.category_name != 'Video' %}
-									    	<a href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.image %});"></a>
+                                             {% if post.pic %}
+									    	<a href="{% static post.pic %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.pic %});"></a>
+                                          {% else %}
+                                                 <a href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.image %});"></a>
+                                            {% endif %}
                                           {% else %}
                                                 {% if  post.videoUrl %}
                                                     <video class="img img-2" controls style="height:unset;margin-bottom: 40px;">
@@ -115,11 +126,23 @@
 
                                         {% endif %}
 										<div class="text text-2 p-4">
-				              <h3 class="mb-2"><a href="single.html">{{ post.title }}</a></h3>
+                                        {% if request.user.is_authenticated %}
+                                            <input type="checkbox" id="chekbox-{{ post.id }}" onchange="archive({{ post.id }})" {% if post.archive %} checked{% endif %} hidden>
+                                            <div class="d-flex mb-3">
+                                            <button type="button" class="btn btn-primary btn-sm mr-2"  style="background-color: #457eff; margin-left: unset" onclick="DeletePost({{ post.id }})">Delete Post</button>
+
+                                            {% if post.archive %}
+                                                <button type="button" id="archive-{{ post.id }}" class="btn btn-primary btn-sm removebefore"  style="background-color: #348c348c;" onclick="archive({{ post.id }})">Un Archive</button>
+                                            {% else %}
+                                                <button type="button"   id="archive-{{ post.id }}" class="btn btn-primary btn-sm removebefore"  style="background-color: #348c34f0;" onclick="archive({{ post.id }})"> Archive</button>
+                                            {% endif %}
+                                            </div>
+				                        {% endif %}
+				              <h3 class="mb-2">{{ post.title }}</h3>
 				              <div class="meta-wrap">
 												<p class="meta">
 				              		<span>{{ post.date }}</span>
-				              		<span><a href="single.html">{{ post.category }}</a></span>
+				              		<span><a href="{% url 'CategoryBlog' post.category.category_name %}">{{ post.category }}</a></span>
 {#				              		<span>5 Comment</span>#}
 				              	</p>
 			              	</div>
@@ -155,21 +178,21 @@
 {#			    			</div>#}
 
 			    		</div><!-- END-->
-			    		<div class="row">
-			          <div class="col">
-			            <div class="block-27">
-			              <ul>
-			                <li><a href="#">&lt;</a></li>
-			                <li class="active"><span>1</span></li>
-			                <li><a href="#">2</a></li>
-			                <li><a href="#">3</a></li>
-			                <li><a href="#">4</a></li>
-			                <li><a href="#">5</a></li>
-			                <li><a href="#">&gt;</a></li>
-			              </ul>
-			            </div>
-			          </div>
-			        </div>
+{#			    		<div class="row">#}
+{#			          <div class="col">#}
+{#			            <div class="block-27">#}
+{#			              <ul>#}
+{#			                <li><a href="#">&lt;</a></li>#}
+{#			                <li class="active"><span>1</span></li>#}
+{#			                <li><a href="#">2</a></li>#}
+{#			                <li><a href="#">3</a></li>#}
+{#			                <li><a href="#">4</a></li>#}
+{#			                <li><a href="#">5</a></li>#}
+{#			                <li><a href="#">&gt;</a></li>#}
+{#			              </ul>#}
+{#			            </div>#}
+{#			          </div>#}
+{#			        </div>#}
 			    	</div>
 	    			<div class="col-lg-4 sidebar ftco-animate bg-light">
 	            <div class="sidebar-box">
@@ -208,7 +231,12 @@
 
                     {% for post in  Suggested_Articles %}
 	              <div class="block-21 mb-4 d-flex">
+                    {% if post.pic %}
+	                <a class="blog-img mr-4" style="background-image: url({% static post.pic %});"></a>
+                      {% else %}
 	                <a class="blog-img mr-4" style="background-image: url({% static post.image %});"></a>
+                      {% endif %}
+
 	                <div class="text">
 	                  <h3 class="heading"><a href="{% url 'Blog' %}#post{{ post.id }}">{{ post.title }}</a></h3>
 	                  <div class="meta">
@@ -297,6 +325,53 @@
 
 
 <script>
+    function archive(id) {
+          let archive;
+          archive = document.getElementById('archive-'+id).innerHTML;
+          let button_archive = document.getElementById('archive-'+id);
+            console.log(archive)
+          if(archive == 'Un Archive'){
+              archive = 'False'
+              button_archive.style.backgroundColor="#348c34f0";
+              button_archive.innerHTML="Archive";
+            }
+          else {
+              archive = 'True'
+              button_archive.style.backgroundColor="#348c348c";
+              button_archive.innerHTML="Un Archive";
+          }
+
+
+        let requestOptions = {
+          method: 'GET'}
+
+          fetch(`/api/archive/?archived=`+archive+'&id='+id,requestOptions)
+
+    }
+
+   async function DeletePost(id) {
+
+         if (confirm(`you want delete post ${id} ?!`)) {
+
+             let requestOptions = {
+                 method: 'GET'
+             }
+
+             await fetch(`/api-post/delete/${id}`, requestOptions)
+                 .then(response => response.json())
+                 .then(result => {
+                     console.log(result)
+                     console.log(result['success'])
+                     if (result['success'] == 'success') {
+                         location.reload()
+                     }
+                 })
+                 .catch(error => console.log('error', error));
+
+         }
+
+
+    }
     function smile() {
           let a;
           a = document.getElementById("div1");

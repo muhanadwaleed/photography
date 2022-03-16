@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>{% block page-title %}{% endblock %}</title>
+    <link rel="icon"  type = "image" href="{{ main_image }}">
+
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Herr+Von+Muellerhoff" rel="stylesheet">
@@ -82,7 +84,7 @@
                     {% if request.user.is_authenticated %}
                         <h4 class="h2"><span>Admin</span></h4>
 					<li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Message-Read' %}>Messages</a></li>
-					<li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href='{% url 'admin:index' %}'>Admin Dashboard</a></li>
+					<li> <a href='{% url 'admin:index' %}'>Admin Dashboard</a></li>
                     {% endif %}
 				</ul>
 			</nav>

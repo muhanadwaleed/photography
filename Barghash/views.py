@@ -1,8 +1,13 @@
+import sys
+import os
+
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import instaloader
 import re
 import random
+
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -10,31 +15,43 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 
 from Barghash.models import *
+import time
+
+
+def current_milli_time():
+    return round(time.time() * 1000)
 
 
 class Home(View):
 
     def get(self, request):
+        before = current_milli_time()
         profile = Profile.objects.first()
         instgram_opj = Instagram.objects.first()
 
         ig = instaloader.Instaloader()
         dp = instgram_opj.name
         profile_pic = ig.download_profile(dp)
-        list_of_posts = []
         list_of_pic = []
 
         for s in profile_pic:
-            # print("****",s)
-            v = s.split('.jpg')[0].split('UTC')[0] + 'UTC.txt'
-            list_of_posts.append('static/' + v)
-            if '_UTC_' in s:
-                list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC_1.jpg')
+            if os.path.exists('static/' + s.replace('.jpg', '.webp')):
+                if '.jpg' in s:
+                    corrected_name = s.replace('.jpg', '.webp')
+                    print('corrected_name', corrected_name)
+                    if '_UTC_' in corrected_name:
+                        list_of_pic.append(corrected_name.split('.webp')[0].split('UTC')[0] + 'UTC_1.webp')
+                    else:
+                        list_of_pic.append(corrected_name.split('.webp')[0].split('UTC')[0] + 'UTC.webp')
             else:
-                list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC.jpg')
+                v = s.split('.jpg')[0].split('UTC')[0] + 'UTC.txt'
+                if '_UTC_' in s:
+                    list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC_1.jpg')
+                else:
+                    list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC.jpg')
 
         filterd_list_of_pic = set(list_of_pic)
-        filterd_list_of_posts = set(list_of_posts)
+        print('filterd_list_of_pic',filterd_list_of_pic)
 
         for p in filterd_list_of_pic:
 
@@ -53,9 +70,6 @@ class Home(View):
                     post[0].caption = f.read()
 
                 post[0].save()
-            else:
-                print("noooooooooooo")
-
         return render(request, "index.html", {
             'main_image': profile.profile_image.url,
             'instagram_profile_name': instgram_opj.name,
@@ -68,9 +82,11 @@ class Collection(View):
 
     def get(self, request):
         profile = Profile.objects.first()
+        images = GallaryImage.objects.all()
         return render(request, "collection.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
+            'images': images,
 
         })
 
@@ -79,6 +95,7 @@ class About(View):
     def get(self, request):
         profile = Profile.objects.first()
         about = AboutPage.objects.first()
+
         return render(request, "about.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
@@ -103,9 +120,9 @@ class Blog(View):
     def get(self, request):
         profile = Profile.objects.first()
         if request.user.is_authenticated:
-          posts = Post.objects.all().order_by('-date')
+            posts = Post.objects.all().order_by('-date')
         else:
-          posts = Post.objects.filter(archive=False).order_by('-date')
+            posts = Post.objects.filter(archive=False).order_by('-date')
         items = list(posts)
         categories = Category.objects.all()
         text = '0'
@@ -170,8 +187,6 @@ class SearchResults(View):
         elif date_to:
             object_list = object_list.filter(date__lte=date_to)
 
-
-
         posts = Post.objects.filter(archive=False).order_by('-date')
         items = list(posts)
         categories = Category.objects.all()
@@ -228,16 +243,35 @@ class Message(APIView):
         })
 
 
-class Archive(LoginRequiredMixin,APIView):
+class Archive(LoginRequiredMixin, APIView):
     def get(self, request):
-        print(request.GET)
         archive = request.GET.get('archived', None)
         id = request.GET.get('id', None)
         post = Post.objects.get(id=id)
-        print('befor', post.archive)
         post.archive = archive
         post.save()
-        print('after', post.archive)
+
+
+class DeletePost(LoginRequiredMixin, APIView):
+    def get(self, request, id):
+        try:
+            post = Post.objects.get(id=id)
+            post.delete()
+            success = 'success'
+            return Response({'success': success})
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(u'error in available labs GET METHOD, at line {line}: {error}, file: {file}, type: {type}'.format(
+                line=exc_tb.tb_lineno,
+                error=e, file=fname,
+                type=exc_type))
+            Log.objects.create(
+                body=u'in available labs GET METHOD, at line {line}: {error}, file: {file}, type: {type}'.format(
+                    line=exc_tb.tb_lineno,
+                    error=e, file=fname,
+                    type=exc_type))
+            return Response({'error': str(e)})
 
 
 class Test(View):
@@ -253,7 +287,7 @@ class Test(View):
 class MessageRead(LoginRequiredMixin, View):
     def get(self, request):
         profile = Profile.objects.first()
-        messages = Messages.objects.all()
+        messages = Messages.objects.all().order_by('-date')
         return render(request, "messages.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
@@ -279,4 +313,3 @@ class PostAdmin(LoginRequiredMixin, View):
             'search_text': text,
 
         })
-

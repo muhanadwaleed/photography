@@ -8,6 +8,8 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from my_website.settings import MEDIA_ROOT
+
+
 # from faicon.fields import FAIconField
 
 class Profile(models.Model):
@@ -111,6 +113,17 @@ class Post(models.Model):
         else:
             return False
 
+    def pic(self):
+        pic = str(self.image)
+        print("pic", pic)
+
+        if os.path.exists('static/' + pic.replace('.jpg', '.webp')):
+            print(pic.replace('.jpg', '.webp'))
+            print(pic)
+            return pic.replace('.jpg', '.webp')
+        else:
+            return False
+
     def videoUrl(self):
         vid = str(self.image)
         if os.path.exists('static/' + vid.replace('.jpg', '.mp4')):
@@ -142,3 +155,20 @@ class Service(models.Model):
     #     before = self.icon.icon
     #     main = str(self.icon).split(':')[1].replace(',', ' ')
     #     return str(main+'-'+before)
+
+
+class Log(models.Model):
+    date = models.DateTimeField(auto_now_add=True, blank=True)
+    body = models.TextField(null=True)
+
+    def __str__(self):
+        return self.body
+
+
+class GallaryImage(models.Model):
+    image = models.ImageField(null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
+    title = models.CharField(max_length=20, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
