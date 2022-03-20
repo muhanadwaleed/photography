@@ -5,296 +5,249 @@
 
 
 {% block extracss %}
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <style>
-        p.textt {
-            display: -webkit-box;
-            -webkit-line-clamp: 5;
-            -webkit-box-orient: vertical;
-            text-overflow: ellipsis;
-            overflow: hidden;
+<style>
+    p.textt {
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .blog-entry .img {
+        height: 400px;
+    }
+    .mfp-bg {
+        background: {{ profile.color }};
+        filter: brightness(0.3);
+    }
+
+    .btn.btn-primary:hover {
+        color: white;
+    }
+</style>
+
+
+<style>
+    .no_found{
+          text-align:center;
+            padding-bottom: 40%;
+        }
+    .no_found h1{
+          font-size:50px;
         }
 
-        .blog-entry .img {
-            height: 400px;
-        }
-        .mfp-bg {
-            background: {{ profile.color }};
-            filter: brightness(0.3);
-        }
 
-        .btn.btn-primary:hover {
-            color: white;
-        }
-
-    </style>
-
-
-    <style>
-
-        .no_found{
-              text-align:center;
-                padding-bottom: 40%;
-            }
-        .no_found h1{
-              font-size:50px;
-            }
-
-
-        .btn::before {
-            background: {{ profile.color }};
-        }
-        .removebefore::before {
-            background: unset;
-        }
-        .btn.btn-primary {
-            margin-left: 2%;
-            background: #636363;
-            border-radius: 5px;
-        }
-        {#body{#}
-        {#        background-image: linear-gradient(to top, #2e1753, #1f1746, #131537, #0d1028, #050819);#}
-        {#}#}
-
-    </style>
+    .btn::before {
+        background: {{ profile.color }};
+    }
+    .removebefore::before {
+        background: unset;
+    }
+    .btn.btn-primary {
+        margin-left: 2%;
+        background: #636363;
+        border-radius: 5px;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
-
 	<div id="colorlib-page">
 		<div id="colorlib-main">
-
 			<section class="ftco-section ftco-bread">
 				<div class="container">
 					<div class="row no-gutters slider-text justify-content-center align-items-center">
-	          <div class="col-md-8 ftco-animate" style="margin-right: auto;">
-	            <p class="breadcrumbs"><span class="mr-2"><a href={% url 'Home' %}>Home</a></span> <span>Blog</span></p>
-	            <h1 class="bread">Enjoy With My Blog</h1>
-	          </div>
-	        </div>
+                        <div class="col-md-8 ftco-animate" style="margin-right: auto;">
+                            <p class="breadcrumbs"><span class="mr-2"><a href={% url 'Home' %}>Home</a></span> <span>Blog</span></p>
+                            <h1 class="bread">Enjoy With My Blog</h1>
+                        </div>
+                    </div>
 				</div>
 			</section>
 			<section class="ftco-section">
-	    	<div class="container">
-	    		<div class="row d-flex">
-	    			<div class="col-lg-8">
-                    {% if search_text != '0' %}
-                        {% if search_text == 'hala' %}
-                             <div class="no_found">
-                            <div class="text">
-                                  <h1> Ooh!!!</h1>
-                                  <hr>
-                                  <div> hala?? ,did you mean The moon</div>
-                                <div id="div" class="fa" style="font-size: 80px">&#xf118;</div>
-                            </div>
-                        </div>
-                         {% else %}
-                             <div class="no_found">
-                            <div class="text">
-                                  <h1> Sorry !!</h1>
-                                  <hr>
-                                  <div> Sorry , we couldn't find any matches for "{{ search_text }}"</div>
-                                <div id="div1" class="fa" style="font-size: 80px"></div>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% endif %}
-	    				<div class="row">
-                            {% for post in posts %}
-			    			    <div class="col-md-12" id="post{{ post.id }}">
-			    				<div class="blog-entry ftco-animate d-md-flex">
-                                        {% if post.category.category_name != 'Video' %}
-                                             {% if post.pic %}
-									    	<a href="{% static post.pic %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.pic %});"></a>
-                                          {% else %}
-                                                 <a href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.image %});"></a>
-                                            {% endif %}
-                                          {% else %}
-                                                {% if  post.videoUrl %}
-                                                    <video class="img img-2" controls style="height:unset;margin-bottom: 40px;">
-                                                         {% if post.video %}
-                                                                 <source src="{{ post.video.url }}"type="video/mp4">
-                                                         {% else %}
-                                                                 <source src="{% static post.videoUrl %}"type="video/mp4">
-                                                         {% endif %}
-                                                    </video>
-                                                {% else %}
-                                                           <a  href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end"  style="background-image: url({% static post.image %});"></a>
-                                                {% endif %}
-
-
-                                        {% endif %}
-										<div class="text text-2 p-4">
-                                        {% if request.user.is_authenticated %}
-                                            <input type="checkbox" id="chekbox-{{ post.id }}" onchange="archive({{ post.id }})" {% if post.archive %} checked{% endif %} hidden>
-                                            <div class="d-flex mb-3">
-                                            <button type="button" class="btn btn-primary btn-sm mr-2"  style="background-color: #457eff; margin-left: unset" onclick="DeletePost({{ post.id }})">Delete Post</button>
-
-                                            {% if post.archive %}
-                                                <button type="button" id="archive-{{ post.id }}" class="btn btn-primary btn-sm removebefore"  style="background-color: #348c348c;" onclick="archive({{ post.id }})">Un Archive</button>
-                                            {% else %}
-                                                <button type="button"   id="archive-{{ post.id }}" class="btn btn-primary btn-sm removebefore"  style="background-color: #348c34f0;" onclick="archive({{ post.id }})"> Archive</button>
-                                            {% endif %}
-                                            </div>
-				                        {% endif %}
-				              <h3 class="mb-2">{{ post.title }}</h3>
-				              <div class="meta-wrap">
-												<p class="meta">
-				              		<span>{{ post.date }}</span>
-				              		<span><a href="{% url 'CategoryBlog' post.category.category_name %}">{{ post.category }}</a></span>
-{#				              		<span>5 Comment</span>#}
-				              	</p>
-			              	</div>
-                                            <div class="textt">
-				              <p class="mb-4 textt" id="{{ post.id }}">{{post.caption}}</p>
-                                                </div>
-                                {% if post.wordcounter %}
-				              <a class="btn-custom" onclick="readmore({{ post.id }})" id="btn{{ post.id }}" style="cursor: pointer; color: #0000008a;">Read More <span class="ion-ios-arrow-forward"></span></a>
+                <div class="container">
+                    <div class="row d-flex">
+                        <div class="col-lg-8">
+                            {% if search_text != '0' %}
+                                {% if search_text == 'hala' %}
+                                    <div class="no_found">
+                                        <div class="text">
+                                              <h1> Ooh!!!</h1>
+                                              <hr>
+                                              <div> hala?? ,did you mean The moon</div>
+                                              <div id="div" class="fa" style="font-size: 80px">&#xf118;</div>
+                                        </div>
+                                    </div>
+                                 {% else %}
+                                     <div class="no_found">
+                                        <div class="text">
+                                              <h1> Sorry !!</h1>
+                                              <hr>
+                                              <div> Sorry , we couldn't find any matches for "{{ search_text }}"</div>
+                                              <div id="div1" class="fa" style="font-size: 80px"></div>
+                                        </div>
+                                     </div>
                                 {% endif %}
-				            </div>
-									</div>
-			    			</div>
-                            {% endfor %}
+                            {% endif %}
+                            <div class="row">
+                                {% for post in posts %}
+                                    <div class="col-md-12" id="post{{ post.id }}">
+                                          <div class="blog-entry ftco-animate d-md-flex">
+                                                {% if post.category.category_name != 'Video' %}
+                                                  {% if post.pic %}
+                                                        <a href="{% static post.pic %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.pic %});">
+                                                        </a>
+                                                  {% else %}
+                                                         <a href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end" style="background-image: url({% static post.image %});"></a>
+                                                  {% endif %}
+                                                {% else %}
+                                                    {% if  post.videoUrl %}
+                                                        <video class="img img-2" controls style="height:unset;margin-bottom: 40px;">
+                                                             {% if post.video %}
+                                                                     <source src="{{ post.video.url }}"type="video/mp4">
+                                                             {% else %}
+                                                                     <source src="{% static post.videoUrl %}"type="video/mp4">
+                                                             {% endif %}
+                                                        </video>
+                                                    {% else %}
+                                                               <a  href="{% static post.image %}" class="img image-popup d-flex img-2 justify-content-start align-items-end"  style="background-image: url({% static post.image %});"></a>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <div class="text text-2 p-4">
+                                                    {% if request.user.is_authenticated %}
+                                                        <input type="checkbox" id="chekbox-{{ post.id }}" onchange="archive({{ post.id }})" {% if post.archive %} checked{% endif %} hidden>
+                                                        <div class="d-flex mb-3">
+                                                            <button type="button" class="btn btn-primary btn-sm mr-2"  style="background-color: #457eff; margin-left: unset" onclick="DeletePost({{ post.id }})">Delete Post</button>
+                                                            {% if post.archive %}
+                                                                <button type="button" id="archive-{{ post.id }}" class="btn btn-primary btn-sm removebefore"  style="background-color: #7D7D7D;" onclick="archive({{ post.id }})">Show</button>
+                                                            {% else %}
+                                                                <button type="button"   id="archive-{{ post.id }}" class="btn btn-primary btn-sm removebefore"  style="background-color: #348c34f0;" onclick="archive({{ post.id }})"> Hide</button>
+                                                            {% endif %}
+                                                        </div>
+                                                    {% endif %}
+                                                    <h3 class="mb-2">{{ post.title }}</h3>
+                                                    <div class="meta-wrap">
+                                                        <p class="meta">
+                                                            <span>{{ post.date }}</span>
+                                                            <span><a href="{% url 'CategoryBlog' post.category.category_name %}">{{ post.category }}</a></span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="textt">
+                                                      <p class="mb-4 textt" id="{{ post.id }}">{{post.caption}}</p>
+                                                    </div>
+                                                    {% if post.wordcounter %}
+                                                      <a class="btn-custom" onclick="readmore({{ post.id }})" id="btn{{ post.id }}" style="cursor: pointer; color: #0000008a;">Read More <span class="ion-ios-arrow-forward"></span></a>
+                                                    {% endif %}
+                                                </div>
+                                          </div>
+                                    </div>
+                                {% endfor %}
+                            </div><!-- END-->
+                        </div>
+                        <div class="col-lg-4 sidebar ftco-animate bg-light">
+                    <div class="sidebar-box">
 
-{#			    			<div class="col-md-12">#}
-{#			    				<div class="blog-entry ftco-animate d-md-flex">#}
-{#                                    <video class="img img-2" controls>#}
-{#                                          <source src="{% static '/barghash.photography/2021-10-05_19-17-18_UTC_1.mp4' %}"type="video/mp4">#}
-{#                                        </video>#}
-{#										<div class="text text-2 p-4">#}
-{#				              <h3 class="mb-2"><a href="single.html">The Photography Technique</a></h3>#}
-{#				              <div class="meta-wrap">#}
-{#												<p class="meta">#}
-{#				              		<span>Dec 14, 2018</span>#}
-{#				              		<span><a href="single.html">Photography</a></span>#}
-{#				              		<span>5 Comment</span>#}
-{#				              	</p>#}
-{#			              	</div>#}
-{#				              <p class="mb-4">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>#}
-{#				              <p><a href="#" class="btn-custom">Read More <span class="ion-ios-arrow-forward"></span></a></p>#}
-{#				            </div>#}
-{#									</div>#}
-{#			    			</div>#}
 
-			    		</div><!-- END-->
-{#			    		<div class="row">#}
-{#			          <div class="col">#}
-{#			            <div class="block-27">#}
-{#			              <ul>#}
-{#			                <li><a href="#">&lt;</a></li>#}
-{#			                <li class="active"><span>1</span></li>#}
-{#			                <li><a href="#">2</a></li>#}
-{#			                <li><a href="#">3</a></li>#}
-{#			                <li><a href="#">4</a></li>#}
-{#			                <li><a href="#">5</a></li>#}
-{#			                <li><a href="#">&gt;</a></li>#}
-{#			              </ul>#}
-{#			            </div>#}
-{#			          </div>#}
-{#			        </div>#}
-			    	</div>
-	    			<div class="col-lg-4 sidebar ftco-animate bg-light">
-	            <div class="sidebar-box">
+                      <form action="{% url 'search_results' %}" class="search-form" method="get">
+                        <div class="form-group">
+                          <span class="icon icon-search"></span>
+                          <input type="text" name="q" class="form-control" placeholder="Type a keyword and hit enter">
+                        </div>
+                          <br>
+                            <h3 class="sidebar-heading">Archives</h3>
+                          <label>From : </label>
+                          <div class="datepicker">
+                              <input type="date" name="date_from" class="form-control"  style="color: #999a99 !important;">
+                          </div>
+                             <label>To : </label>
+                          <div class="datepicker">
+                              <input type="date" name="date_to" class="form-control" style="color: #999a99 !important;">
+                          </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Search</button>
 
+                      </form>
+                    </div>
+                    <div class="sidebar-box ftco-animate">
+                        <h3 class="sidebar-heading">Categories</h3>
+                      <ul class="categories">
+                          {% for category in categories %}
+                        <li><a href="{% url 'CategoryBlog' category.category_name %}">{{ category.category_name }} <span>({{ category.countposts }})</span></a></li>
+                          {% endfor %}
+                      </ul>
+                    </div>
 
-	              <form action="{% url 'search_results' %}" class="search-form" method="get">
-	                <div class="form-group">
-	                  <span class="icon icon-search"></span>
-	                  <input type="text" name="q" class="form-control" placeholder="Type a keyword and hit enter">
-	                </div>
-                      <br>
-                        <h3 class="sidebar-heading">Archives</h3>
-                      <label>From : </label>
-                      <div class="datepicker">
-                          <input type="date" name="date_from" class="form-control"  style="color: #999a99 !important;">
+                    <div class="sidebar-box ftco-animate">
+                      <h3 class="sidebar-heading">Suggest Articles</h3>
+
+                        {% for post in  Suggested_Articles %}
+                      <div class="block-21 mb-4 d-flex">
+                        {% if post.pic %}
+                        <a class="blog-img mr-4" style="background-image: url({% static post.pic %});"></a>
+                          {% else %}
+                        <a class="blog-img mr-4" style="background-image: url({% static post.image %});"></a>
+                          {% endif %}
+
+                        <div class="text">
+                          <h3 class="heading"><a href="{% url 'Blog' %}#post{{ post.id }}">{{ post.title }}</a></h3>
+                          <div class="meta">
+                            <div><a href="#"><span class="icon-calendar"></span>{{ post.date }}</a></div>
+                            <div><a href="#"><span class="icon-person"></span>{{ profile.name }}</a></div>
+                            <div><a href="#"><span class="icon-chat"></span> 19</a></div>
+                          </div>
+                        </div>
                       </div>
-                         <label>To : </label>
-                      <div class="datepicker">
-                          <input type="date" name="date_to" class="form-control" style="color: #999a99 !important;">
-                      </div>
-                        <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                        {% endfor %}
 
-	              </form>
-	            </div>
-	            <div class="sidebar-box ftco-animate">
-	            	<h3 class="sidebar-heading">Categories</h3>
-	              <ul class="categories">
-                      {% for category in categories %}
-	                <li><a href="{% url 'CategoryBlog' category.category_name %}">{{ category.category_name }} <span>({{ category.countposts }})</span></a></li>
-                      {% endfor %}
-	              </ul>
-	            </div>
-
-	            <div class="sidebar-box ftco-animate">
-	              <h3 class="sidebar-heading">Suggest Articles</h3>
-
-                    {% for post in  Suggested_Articles %}
-	              <div class="block-21 mb-4 d-flex">
-                    {% if post.pic %}
-	                <a class="blog-img mr-4" style="background-image: url({% static post.pic %});"></a>
-                      {% else %}
-	                <a class="blog-img mr-4" style="background-image: url({% static post.image %});"></a>
-                      {% endif %}
-
-	                <div class="text">
-	                  <h3 class="heading"><a href="{% url 'Blog' %}#post{{ post.id }}">{{ post.title }}</a></h3>
-	                  <div class="meta">
-	                    <div><a href="#"><span class="icon-calendar"></span>{{ post.date }}</a></div>
-	                    <div><a href="#"><span class="icon-person"></span>{{ profile.name }}</a></div>
-	                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-	                  </div>
-	                </div>
-	              </div>
-                    {% endfor %}
-
-	            </div>
+                    </div>
 
 
-{#	            <div class="sidebar-box ftco-animate">#}
-{#	              <h3 class="sidebar-heading">Tag Cloud</h3>#}
-{#	              <ul class="tagcloud">#}
-{#	                <a href="#" class="tag-cloud-link">animals</a>#}
-{#	                <a href="#" class="tag-cloud-link">human</a>#}
-{#	                <a href="#" class="tag-cloud-link">people</a>#}
-{#	                <a href="#" class="tag-cloud-link">cat</a>#}
-{#	                <a href="#" class="tag-cloud-link">dog</a>#}
-{#	                <a href="#" class="tag-cloud-link">nature</a>#}
-{#	                <a href="#" class="tag-cloud-link">leaves</a>#}
-{#	                <a href="#" class="tag-cloud-link">food</a>#}
-{#	              </ul>#}
-{#	            </div>#}
+    {#	            <div class="sidebar-box ftco-animate">#}
+    {#	              <h3 class="sidebar-heading">Tag Cloud</h3>#}
+    {#	              <ul class="tagcloud">#}
+    {#	                <a href="#" class="tag-cloud-link">animals</a>#}
+    {#	                <a href="#" class="tag-cloud-link">human</a>#}
+    {#	                <a href="#" class="tag-cloud-link">people</a>#}
+    {#	                <a href="#" class="tag-cloud-link">cat</a>#}
+    {#	                <a href="#" class="tag-cloud-link">dog</a>#}
+    {#	                <a href="#" class="tag-cloud-link">nature</a>#}
+    {#	                <a href="#" class="tag-cloud-link">leaves</a>#}
+    {#	                <a href="#" class="tag-cloud-link">food</a>#}
+    {#	              </ul>#}
+    {#	            </div>#}
 
-{#							<div class="sidebar-box subs-wrap img" style="background-image: url();">#}
-{#								<div class="overlay"></div>#}
-{#								<h3 class="mb-4 sidebar-heading">Newsletter</h3>#}
-{#								<p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia</p>#}
-{#	              <form action="#" class="subscribe-form">#}
-{#	                <div class="form-group">#}
-{#	                  <input type="text" class="form-control" placeholder="Email Address">#}
-{#	                  <input type="submit" value="Subscribe" class="mt-2 btn btn-white submit">#}
-{#	                </div>#}
-{#	              </form>#}
-{#	            </div>#}
+    {#							<div class="sidebar-box subs-wrap img" style="background-image: url();">#}
+    {#								<div class="overlay"></div>#}
+    {#								<h3 class="mb-4 sidebar-heading">Newsletter</h3>#}
+    {#								<p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia</p>#}
+    {#	              <form action="#" class="subscribe-form">#}
+    {#	                <div class="form-group">#}
+    {#	                  <input type="text" class="form-control" placeholder="Email Address">#}
+    {#	                  <input type="submit" value="Subscribe" class="mt-2 btn btn-white submit">#}
+    {#	                </div>#}
+    {#	              </form>#}
+    {#	            </div>#}
 
-{#	            <div class="sidebar-box ftco-animate">#}
-{#	            	<h3 class="sidebar-heading">Archives</h3>#}
-{#	              <ul class="categories">#}
-{#	              	<li><a href="#">Decob14 2018 <span>(10)</span></a></li>#}
-{#	                <li><a href="#">September 2018 <span>(6)</span></a></li>#}
-{#	                <li><a href="#">August 2018 <span>(8)</span></a></li>#}
-{#	                <li><a href="#">July 2018 <span>(2)</span></a></li>#}
-{#	                <li><a href="#">June 2018 <span>(7)</span></a></li>#}
-{#	                <li><a href="#">May 2018 <span>(5)</span></a></li>#}
-{#	              </ul>#}
-{#	            </div>#}
+    {#	            <div class="sidebar-box ftco-animate">#}
+    {#	            	<h3 class="sidebar-heading">Archives</h3>#}
+    {#	              <ul class="categories">#}
+    {#	              	<li><a href="#">Decob14 2018 <span>(10)</span></a></li>#}
+    {#	                <li><a href="#">September 2018 <span>(6)</span></a></li>#}
+    {#	                <li><a href="#">August 2018 <span>(8)</span></a></li>#}
+    {#	                <li><a href="#">July 2018 <span>(2)</span></a></li>#}
+    {#	                <li><a href="#">June 2018 <span>(7)</span></a></li>#}
+    {#	                <li><a href="#">May 2018 <span>(5)</span></a></li>#}
+    {#	              </ul>#}
+    {#	            </div>#}
 
 
 
-	          </div><!-- END COL -->
-	    		</div>
-	    	</div>
-	    </section>
+                  </div><!-- END COL -->
+                    </div>
+                </div>
+            </section>
 		</div><!-- END COLORLIB-MAIN -->
 	</div><!-- END COLORLIB-PAGE -->
 
@@ -304,91 +257,80 @@
 
 
 {% block extrajavascript %}
+
     <script>
-    function readmore(id){
+        function readmore(id){
 
-        let caption = document.getElementById(id);
-        let btnText = document.getElementById("btn"+id);
-        if (caption.style.display=="unset") {
-            caption.setAttribute("style", "display:-webkit-box;");
-                btnText.innerHTML = "Read More "+"<span class='ion-ios-arrow-forward'></span>";
-        }
-        else {
-            caption.setAttribute("style", "display:unset;");
-                btnText.innerHTML = "<span class='ion-ios-arrow-back'></span>"+" Read Less";
-
-        }
-
-
-    }
-    </script>
-
-
-<script>
-    function archive(id) {
-          let archive;
-          archive = document.getElementById('archive-'+id).innerHTML;
-          let button_archive = document.getElementById('archive-'+id);
-            console.log(archive)
-          if(archive == 'Un Archive'){
-              archive = 'False'
-              button_archive.style.backgroundColor="#348c34f0";
-              button_archive.innerHTML="Archive";
+            let caption = document.getElementById(id);
+            let btnText = document.getElementById("btn"+id);
+            if (caption.style.display=="unset") {
+                caption.setAttribute("style", "display:-webkit-box;");
+                    btnText.innerHTML = "Read More "+"<span class='ion-ios-arrow-forward'></span>";
             }
-          else {
-              archive = 'True'
-              button_archive.style.backgroundColor="#348c348c";
-              button_archive.innerHTML="Un Archive";
-          }
+            else {
+                caption.setAttribute("style", "display:unset;");
+                    btnText.innerHTML = "<span class='ion-ios-arrow-back'></span>"+" Read Less";
+
+            }
 
 
-        let requestOptions = {
-          method: 'GET'}
+        }
+    </script>
+    <script>
+        function archive(id) {
+              let archive;
+              archive = document.getElementById('archive-'+id).innerHTML;
+              let button_archive = document.getElementById('archive-'+id);
+                console.log(archive)
+              if(archive == 'Show'){
+                  archive = 'False'
+                  button_archive.style.backgroundColor="#348c34f0";
+                  button_archive.innerHTML="Hide";
+                }
+              else {
+                  archive = 'True'
+                  button_archive.style.backgroundColor="#7D7D7D";
+                  button_archive.innerHTML="Show";
+              }
+            let requestOptions = {
+              method: 'GET'}
+              fetch(`/api/archive/?archived=`+archive+'&id='+id,requestOptions)
+        }
 
-          fetch(`/api/archive/?archived=`+archive+'&id='+id,requestOptions)
-
-    }
-
-   async function DeletePost(id) {
-
-         if (confirm(`you want delete post ${id} ?!`)) {
-
-             let requestOptions = {
-                 method: 'GET'
+       async function DeletePost(id) {
+             if (confirm(`you want delete post ${id} ?!`)) {
+                 let requestOptions = {
+                     method: 'GET'
+                 }
+                 await fetch(`/api-post/delete/${id}`, requestOptions)
+                     .then(response => response.json())
+                     .then(result => {
+                         console.log(result)
+                         console.log(result['success'])
+                         if (result['success'] == 'success') {
+                             location.reload()
+                         }
+                     })
+                     .catch(error => console.log('error', error));
              }
-
-             await fetch(`/api-post/delete/${id}`, requestOptions)
-                 .then(response => response.json())
-                 .then(result => {
-                     console.log(result)
-                     console.log(result['success'])
-                     if (result['success'] == 'success') {
-                         location.reload()
-                     }
-                 })
-                 .catch(error => console.log('error', error));
-
-         }
-
-
-    }
-    function smile() {
-          let a;
-          a = document.getElementById("div1");
-          a.innerHTML = "&#xf118;";
-          setTimeout(function () {
-              a.innerHTML = "&#xf11a;";
-            }, 1000);
-          setTimeout(function () {
-              a.innerHTML = "&#xf119;";
-            }, 2000);
-          setTimeout(function () {
-              a.innerHTML = "&#xf11a;";
-            }, 3000);
-    }
-    smile();
-    setInterval(smile, 4000);
-</script>
+       }
+       function smile() {
+              let a;
+              a = document.getElementById("div1");
+              a.innerHTML = "&#xf118;";
+              setTimeout(function () {
+                  a.innerHTML = "&#xf11a;";
+                }, 1000);
+              setTimeout(function () {
+                  a.innerHTML = "&#xf119;";
+                }, 2000);
+              setTimeout(function () {
+                  a.innerHTML = "&#xf11a;";
+                }, 3000);
+       }
+       smile();
+       setInterval(smile, 4000);
+    </script>
 
 {% endblock %}
 

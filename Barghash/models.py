@@ -99,6 +99,7 @@ class Post(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     archive = models.BooleanField(null=True, blank=True, default=False)
+    from_instagram = models.BooleanField(null=True, blank=True, default=False)
     video = models.FileField(upload_to='videos_uploaded', null=True, blank=True,
                              validators=[
                                  FileExtensionValidator(allowed_extensions=['MOV', 'avi', 'mp4', 'webm', 'mkv'])])
@@ -115,11 +116,8 @@ class Post(models.Model):
 
     def pic(self):
         pic = str(self.image)
-        print("pic", pic)
 
         if os.path.exists('static/' + pic.replace('.jpg', '.webp')):
-            print(pic.replace('.jpg', '.webp'))
-            print(pic)
             return pic.replace('.jpg', '.webp')
         else:
             return False
@@ -166,6 +164,7 @@ class Log(models.Model):
 
 
 class GallaryImage(models.Model):
+    date = models.DateTimeField(auto_now_add=True, blank=True)
     image = models.ImageField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     title = models.CharField(max_length=20, null=True, blank=True)

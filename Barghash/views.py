@@ -25,55 +25,15 @@ def current_milli_time():
 class Home(View):
 
     def get(self, request):
-        before = current_milli_time()
         profile = Profile.objects.first()
         instgram_opj = Instagram.objects.first()
+        list_pic = Post.objects.filter(from_instagram=True).exclude(category__category_name='Video').order_by('-date')[
+                   :instgram_opj.numper_of_posts]
 
-        ig = instaloader.Instaloader()
-        dp = instgram_opj.name
-        profile_pic = ig.download_profile(dp)
-        list_of_pic = []
-
-        for s in profile_pic:
-            if os.path.exists('static/' + s.replace('.jpg', '.webp')):
-                if '.jpg' in s:
-                    corrected_name = s.replace('.jpg', '.webp')
-                    print('corrected_name', corrected_name)
-                    if '_UTC_' in corrected_name:
-                        list_of_pic.append(corrected_name.split('.webp')[0].split('UTC')[0] + 'UTC_1.webp')
-                    else:
-                        list_of_pic.append(corrected_name.split('.webp')[0].split('UTC')[0] + 'UTC.webp')
-            else:
-                v = s.split('.jpg')[0].split('UTC')[0] + 'UTC.txt'
-                if '_UTC_' in s:
-                    list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC_1.jpg')
-                else:
-                    list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC.jpg')
-
-        filterd_list_of_pic = set(list_of_pic)
-        print('filterd_list_of_pic',filterd_list_of_pic)
-
-        for p in filterd_list_of_pic:
-
-            date = re.split('/*_U', p)[0].split('/')[1].split('_')
-            new_date = date[0] + ' ' + date[1].replace('-', ':') + '+00:00'
-
-            if Post.objects.filter(date=new_date).count() == 0:
-                category = Category.objects.get_or_create(category_name='Instagram')
-                post = Post.objects.get_or_create(date=new_date)
-
-                post[0].title = 'From Instagram'
-                post[0].date = new_date
-                post[0].image = p
-                post[0].category = category[0]
-                with open('static/' + p.split('UTC')[0] + 'UTC.txt') as f:
-                    post[0].caption = f.read()
-
-                post[0].save()
         return render(request, "index.html", {
             'main_image': profile.profile_image.url,
             'instagram_profile_name': instgram_opj.name,
-            'profile_pic': sorted(filterd_list_of_pic, reverse=True),
+            'list_pic': list_pic,
             'profile': profile,
         })
 
@@ -83,10 +43,14 @@ class Collection(View):
     def get(self, request):
         profile = Profile.objects.first()
         images = GallaryImage.objects.all()
+        posts = Post.objects.all().order_by('-date')
+        categorys = Category.objects.all()
         return render(request, "collection.html", {
             'main_image': profile.profile_image.url,
             'profile': profile,
             'images': images,
+            'posts': posts,
+            'categorys': categorys,
 
         })
 
@@ -261,15 +225,73 @@ class DeletePost(LoginRequiredMixin, APIView):
             return Response({'success': success})
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(u'error in available labs GET METHOD, at line {line}: {error}, file: {file}, type: {type}'.format(
+            print(u'error in DeletePost  GET METHOD, at line {line}: {error}, type: {type}'.format(
                 line=exc_tb.tb_lineno,
-                error=e, file=fname,
+                error=e,
                 type=exc_type))
             Log.objects.create(
-                body=u'in available labs GET METHOD, at line {line}: {error}, file: {file}, type: {type}'.format(
+                body=u'in DeletePost  GET METHOD, at line {line}: {error},  type: {type}'.format(
                     line=exc_tb.tb_lineno,
-                    error=e, file=fname,
+                    error=e,
+                    type=exc_type))
+            return Response({'error': str(e)})
+
+
+class SyncInstagram(APIView):
+    def get(self, request):
+        try:
+            instgram_opj = Instagram.objects.first()
+            ig = instaloader.Instaloader()
+            dp = instgram_opj.name
+            profile_pic = ig.download_profile(dp)
+            list_of_pic = []
+
+            for s in profile_pic:
+                if os.path.exists('static/' + s.replace('.jpg', '.webp')):
+                    if '.jpg' in s:
+                        corrected_name = s.replace('.jpg', '.webp')
+                        print('corrected_name', corrected_name)
+                        if '_UTC_' in corrected_name:
+                            list_of_pic.append(corrected_name.split('.webp')[0].split('UTC')[0] + 'UTC_1.webp')
+                        else:
+                            list_of_pic.append(corrected_name.split('.webp')[0].split('UTC')[0] + 'UTC.webp')
+                else:
+                    v = s.split('.jpg')[0].split('UTC')[0] + 'UTC.txt'
+                    if '_UTC_' in s:
+                        list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC_1.jpg')
+                    else:
+                        list_of_pic.append(s.split('.jpg')[0].split('UTC')[0] + 'UTC.jpg')
+            filterd_list_of_pic = set(list_of_pic)
+            for p in filterd_list_of_pic:
+
+                date = re.split('/*_U', p)[0].split('/')[1].split('_')
+                new_date = date[0] + ' ' + date[1].replace('-', ':') + '+00:00'
+
+                if Post.objects.filter(date=new_date).count() == 0:
+                    category = Category.objects.get_or_create(category_name='Instagram')
+                    post = Post.objects.get_or_create(date=new_date)
+
+                    post[0].title = 'From Instagram'
+                    post[0].date = new_date
+                    post[0].image = p
+                    post[0].from_instagram = True
+                    post[0].category = category[0]
+                    with open('static/' + p.split('UTC')[0] + 'UTC.txt') as f:
+                        post[0].caption = f.read()
+
+                    post[0].save()
+            success = 'success'
+            return Response({'success': success})
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(u'error in SyncInstagram  POST METHOD, at line {line}: {error}, type: {type}'.format(
+                line=exc_tb.tb_lineno,
+                error=e,
+                type=exc_type))
+            Log.objects.create(
+                body=u'in SyncInstagram  POST METHOD, at line {line}: {error},  type: {type}'.format(
+                    line=exc_tb.tb_lineno,
+                    error=e,
                     type=exc_type))
             return Response({'error': str(e)})
 

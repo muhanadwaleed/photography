@@ -39,6 +39,7 @@ urlpatterns = [
     path('api/send-Message/', Message.as_view(), name='Message'),
     path('api/archive/', Archive.as_view(), name='archive'),
     path('api-post/delete/<int:id>', DeletePost.as_view(), name='delete-post'),
+    path('api/sync-instagram/', SyncInstagram.as_view(), name='sync-instagram'),
     path('insta/', TemplateView.as_view(template_name='index.html', extra_context={
         "instagram_profile_name": "barghash.photography"
     })),

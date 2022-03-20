@@ -2,84 +2,64 @@
 
 <!DOCTYPE html>
 <html lang="en">
-      {% block page-title %}{{ profile.name }}{% endblock %}
+{% block page-title %}{{ profile.name }}{% endblock %}
 
 {% block extracss %}
     <style>
-    .btn.btn-primary {
-        background: {{ profile.color }};
-    }
-    .btn::before {
-        background: unset;
-    }
+        .btn.btn-primary {
+            background: {{ profile.color }};
+        }
+        .btn::before {
+            background: unset;
+        }
 
-    .custom-center {
-        justify-content: center;
-         border: solid {{ profile.color }};
-    }
+        .custom-center {
+            justify-content: center;
+             border: solid {{ profile.color }};
+        }
     </style>
 {% endblock %}
 
-  {% block body %}
+{% block body %}
 
 	<div id="colorlib-page">
 		<div id="colorlib-main">
-
-			<section class="ftco-section ftco-bread">
-				<div class="container">
-					<div class="row no-gutters slider-text justify-content-center align-items-center">
-	          <div class="col-md-8 ftco-animate" style="margin-right: 27%;">
-	            <p class="breadcrumbs"><span class="mr-2"><a href={% url 'Home' %}>Home</a></span> <span>Messages</span></p>
-	            <h1 class="bread">Messages</h1>
-	          </div>
-	        </div>
-				</div>
-			</section>
-			<section class="ftco-section contact-section">
-	      <div class="container">
-             <div class="d-flex table-responsive" style="justify-content: space-around;  align-items: center; flex-wrap: wrap">
-{#            <table class="table" style="width:80%;">#}
-{#              <thead id="thead" class="table-dark" style="display: none;">#}
-{#                <tr>#}
-{#                    <td>ID</td>#}
-{#                    <td>Package</td>#}
-{#                    <td>Package id</td>#}
-{#                    <td>User</td>#}
-{#                    <td>Date - Time</td>#}
-{#                </tr>#}
-{#              </thead>#}
-{#              <tbody id="package-orders-table">#}
-{#              </tbody>#}
-{#            </table>#}
-{#            #}
-
-            {% for message in messages %}
-                <div class="card" style="width: 18rem;margin-bottom: 15px;">
-{#                  <img class="card-img-top" src="{{ message.image.url}}" alt="Card image cap">#}
-                  <div class="card-body">
-                    <h5 class="card-title">( {{ message.messages_number }} ) {{ message.name }}</h5>
-                    <h5 class="card-title">{{ messages.subject }}</h5>
-                    <p class="card-text"> - {{ message.date.date}}<br> {{ message.message }}</p>
-                  </div>
-                  <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Contact Way : {{ message.contact_way }}</li>
-
-                  </ul>
-                  <div class="card-body">
-                    <a href="tel://{{ message.contact_way }}" class="btn btn-primary py-3 px-5 card-link " style="padding: 1rem 0.75rem 1rem 0.75rem  !important; border-radius: 50px">Call</a>
-                    <a href="mailto: {{ message.contact_way }}" class="btn btn-primary py-3 px-5 card-link" style="padding:1rem 0.75rem 1rem  0.75rem !important; border-radius: 50px">Send Email</a>
-                  </div>
+            <section class="ftco-section ftco-bread">
+                <div class="container">
+                    <div class="row no-gutters slider-text justify-content-center align-items-center">
+                      <div class="col-md-8 ftco-animate" style="margin-right: 27%;">
+                        <p class="breadcrumbs"><span class="mr-2"><a href={% url 'Home' %}>Home</a></span> <span>Messages</span></p>
+                        <h1 class="bread">Messages</h1>
+                      </div>
+                    </div>
                 </div>
-            {% endfor %}
+            </section>
+            <section class="ftco-section contact-section">
+                  <div class="container">
+                     <div class="d-flex table-responsive" style="justify-content: space-around; flex-wrap: wrap">
 
-
-        </div>
-	      </div>
-	    </section>
-
+                        {% for message in messages %}
+                            <div class="card" style="width: 18rem;margin-bottom: 15px;">
+                              <div class="card-body">
+                                <h5 class="card-title">({{ message.messages_number }}) {{ message.name }}</h5>
+                                <h5 class="card-title">{{ messages.subject }}</h5>
+                                <p class="card-text"> - {{ message.date.date}}<br> {{ message.message }}</p>
+                              </div>
+                              <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Contact Way : {{ message.contact_way }}</li>
+                              </ul>
+                              <div class="card-body">
+                                <a href="tel://{{ message.contact_way }}" class="btn btn-primary py-3 px-5 card-link " style="padding: 1rem 0.75rem 1rem 0.75rem  !important; border-radius: 50px">Call</a>
+                                <a href="mailto: {{ message.contact_way }}" class="btn btn-primary py-3 px-5 card-link" style="padding:1rem 0.75rem 1rem  0.75rem !important; border-radius: 50px">Send Email</a>
+                              </div>
+                            </div>
+                        {% endfor %}
+                     </div>
+                  </div>
+            </section>
 		</div><!-- END COLORLIB-MAIN -->
 	</div><!-- END COLORLIB-PAGE -->
 
   <!-- loader -->
 
-      {% endblock %}
+{% endblock %}

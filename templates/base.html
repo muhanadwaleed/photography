@@ -9,69 +9,64 @@
     <title>{% block page-title %}{% endblock %}</title>
     <link rel="icon"  type = "image" href="{{ main_image }}">
 
-        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+
+    {% block csssheet %}{% endblock %}
+    <!-- CSS here -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Herr+Von+Muellerhoff" rel="stylesheet">
 
-    <link rel="stylesheet" href= "{% static 'Barghash/css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Barghash/css/open-iconic-bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'Barghash/css/animate.css' %}">
 
     <link rel="stylesheet" href="{% static 'Barghash/css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'Barghash/css/owl.theme.default.min.css' %}">
     <link rel="stylesheet" href="{% static 'Barghash/css/magnific-popup.css' %}">
-
     <link rel="stylesheet" href="{% static 'Barghash/css/aos.css' %}">
-
     <link rel="stylesheet" href="{% static 'Barghash/css/ionicons.min.css' %}">
-
     <link rel="stylesheet" href="{% static 'Barghash/css/bootstrap-datepicker.css' %}">
     <link rel="stylesheet" href="{% static 'Barghash/css/jquery.timepicker.css' %}">
-
-
     <link rel="stylesheet" href="{% static 'Barghash/css/flaticon.css' %}">
     <link rel="stylesheet" href="{% static 'Barghash/css/icomoon.css' %}">
     <link rel="stylesheet" href="{% static 'Barghash/css/style.css' %}">
-
-
-    <!-- CSS here -->
-
     <link rel="stylesheet" href="{% static 'footer/assets/css/themify-icons.css' %}">
     <link rel="stylesheet" href="{% static 'footer/assets/css/style.css' %}">
-<style>
-   div.instagram-area.fix {
-        padding-bottom: 20px;
-        margin-top: -83px;
-        max-height: 250px;
-   }
-   .ftco-bread{
-            background-color: {{ profile.color }} !important;
+    <!-- CSS here -->
+
+    <style>
+       div.instagram-area.fix {
+            padding-bottom: 20px;
+            margin-top: -83px;
+            max-height: 250px;
+       }
+       .ftco-bread{
+                background-color: {{ profile.color }} !important;
+            }
+    </style>
+    {% block extracss %}{% endblock %}
+
+    <style>
+        .h2 {
+            font-size: 15px;
+       width: 100%;
+       text-align: center;
+       border-bottom: 1px solid {{ profile.color }};
+       line-height: 0.1em;
+       margin: 20% 0 10% 0px;
         }
-</style>
-{% block extracss %}{% endblock %}
 
-<style>
-    .h2 {
-        font-size: 15px;
-   width: 100%;
-   text-align: center;
-   border-bottom: 1px solid {{ profile.color }};
-   line-height: 0.1em;
-   margin: 20% 0 10% 0px;
-    }
+        .h2 span {
+            background:#f5f5f5;
+            padding:0 10px;
+        }
+    </style>
 
-    .h2 span {
-        background:#f5f5f5;
-        padding:0 10px;
-    }
-</style>
-
-{% block head %}{% endblock %}
+    {% block head %}{% endblock %}
 </head>
 <body cz-shortcut-listen="true">
 <div id="colorlib-page">
 		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
 		<aside id="colorlib-aside" role="complementary" class="js-fullheight text-center">
-
 			<h1 id="colorlib-logo"><a href={% url 'Home' %}><span class="img" style="background-image: url({{ main_image }});"></span>{{ profile.name }}</a></h1>
 			<nav id="colorlib-main-menu" role="navigation">
 				<ul>
@@ -83,52 +78,29 @@
 					<li {% if 'contact' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Contact' %}>Contact</a></li>
                     {% if request.user.is_authenticated %}
                         <h4 class="h2"><span>Admin</span></h4>
-					<li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Message-Read' %}>Messages</a></li>
-					<li> <a href='{% url 'admin:index' %}'>Admin Dashboard</a></li>
+                        <li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Message-Read' %}>Messages</a></li>
+                        <li> <a href='{% url 'admin:index' %}'>Admin Dashboard</a></li>
+                        <li> <a onclick="SyncInstagram()" style="cursor: pointer;">Sync Instagram</a></li>
                     {% endif %}
 				</ul>
 			</nav>
-
-{#			<div class="colorlib-footer">#}
-{#				<h3>Newsletter</h3>#}
-{#				<div class="d-flex justify-content-center">#}
-{#					<form action="#" class="colorlib-subscribe-form">#}
-{#            <div class="form-group d-flex">#}
-{#            	<div class="icon"><span class="icon-paper-plane"></span></div>#}
-{#              <input type="text" class="form-control" placeholder="Enter Email Address">#}
-{#            </div>#}
-{#          </form>#}
-{#				</div>#}
-{#			</div>#}
 		</aside> <!-- END COLORLIB-ASIDE -->
+
 {% block body %}{% endblock %}
+
+
     <div id="colorlib-main">
          <footer class="ftco-footer ftco-bg-dark ftco-section">
-                         <!--? instagram-social start -->
-{#                                         <div class="instagram-area fix">#}
-{#                        <div class="container-fluid p-0">#}
-{#                            <div class="row">#}
-{#                                <div class="col-xl-12">#}
-{#                                    <div class="instagram-active owl-carousel">#}
-{#                                        <div class="single-instagram">#}
-{#                                            <img src={% static 'Barghash/images/image_8.jpg'%} alt="">#}
-{#                                            <a href="#"><i class="ti-instagram"></i></a>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-                        <!-- instagram-social End -->
-
 	      <div class="container px-md-5">
 	        <div class="row mb-5">
 
 	          <div class="col-md">
 	            <div class="ftco-footer-widget mb-4">
 	            	<h2 class="ftco-heading-2">
-                        {% if profile.footer %} {{ profile.footer}}
-                     {% else %} HAVE A QUESTIONS?
+                        {% if profile.footer %}
+                            {{ profile.footer}}
+                        {% else %}
+                            HAVE A QUESTIONS?
                         {% endif %}
                     </h2>
 	            	<div class="block-23 mb-3">
@@ -146,76 +118,92 @@
 	        </div>
 	        <div class="row">
 	          <div class="col-md-12">
-
 	            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-	  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved {{ profile.name }} </p>
+	            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved {{ profile.name }} </p>
 	          </div>
 	        </div>
 	      </div>
 	    </footer>
     </div>
 </div>
-  <script src="{% static 'Barghash/js/jquery.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/popper.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'Barghash/js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/aos.js' %}"></script>
-  <script src="{% static 'Barghash/js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/bootstrap-datepicker.js' %}"></script>
-  <script src="{% static 'Barghash/js/jquery.timepicker.min.js' %}"></script>
-  <script src="{% static 'Barghash/js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="{% static 'Barghash/js/google-map.js' %}"></script>
-  <script src="{% static 'Barghash/js/main.js' %}"></script>
-  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+    <script>
+        function SyncInstagram(){
+            let requestOptions = {
+              method: 'GET',
+              redirect: 'follow'
+            };
+
+            fetch("/api/sync-instagram/", requestOptions)
+              .then(response => response.text())
+              .then(result => console.log(result))
+              .catch(error => console.log('error', error));
+        }
+    </script>
+    <script src="{% static 'Barghash/js/jquery.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/jquery-migrate-3.0.1.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/popper.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/jquery.easing.1.3.js' %}"></script>
+    <script src="{% static 'Barghash/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/jquery.stellar.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/aos.js' %}"></script>
+    <script src="{% static 'Barghash/js/jquery.animateNumber.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'Barghash/js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'Barghash/js/scrollax.min.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="{% static 'Barghash/js/google-map.js' %}"></script>
+    <script src="{% static 'Barghash/js/main.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
 {% block extrajavascript %}{% endblock %}
 
 <!-- JS here -->
-<script src="{% static 'footer/assets/js/vendor/modernizr-3.5.0.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/vendor/modernizr-3.5.0.min.js' %}"></script>
 <!-- Jquery, Popper, Bootstrap -->
-<script src="{% static 'footer/assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/popper.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/bootstrap.min.js' %}"></script>
 <!-- Jquery Mobile Menu -->
-<script src="{% static 'footer/assets/js/jquery.slicknav.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.slicknav.min.js' %}"></script>
 
 <!-- Jquery Slick , Owl-Carousel Plugins -->
-<script src="{% static 'footer/assets/js/owl.carousel.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/slick.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/slick.min.js' %}"></script>
 <!-- One Page, Animated-HeadLin -->
-<script src="{% static 'footer/assets/js/wow.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/animated.headline.js' %}"></script>
-<script src="{% static 'footer/assets/js/jquery.magnific-popup.js' %}"></script>
+    <script src="{% static 'footer/assets/js/wow.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/animated.headline.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.magnific-popup.js' %}"></script>
 
 <!-- Date Picker -->
-<script src="{% static 'footer/assets/js/gijgo.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/gijgo.min.js' %}"></script>
 <!-- Nice-select, sticky -->
-<script src="{% static 'footer/assets/js/jquery.nice-select.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/jquery.sticky.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.sticky.js' %}"></script>
 <!-- Progress -->
-<script src="{% static 'footer/assets/js/jquery.barfiller.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.barfiller.js' %}"></script>
 
 <!-- counter , waypoint,Hover Direction -->
-<script src="{% static 'footer/assets/js/jquery.counterup.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/waypoints.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/jquery.countdown.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/hover-direction-snake.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/waypoints.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/hover-direction-snake.min.js' %}"></script>
 
 <!-- contact js -->
-<script src="{% static 'footer/assets/js/contact.js' %}"></script>
-<script src="{% static 'footer/assets/js/jquery.form.js' %}"></script>
-<script src="{% static 'footer/assets/js/jquery.validate.min.js' %}"></script>
-<script src="{% static 'footer/assets/js/mail-script.js' %}"></script>
-<script src="{% static 'footer/assets/js/jquery.ajaxchimp.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/contact.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.form.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'footer/assets/js/mail-script.js' %}"></script>
+    <script src="{% static 'footer/assets/js/jquery.ajaxchimp.min.js' %}"></script>
 
 <!-- Jquery Plugins, main Jquery -->
-<script src="{% static 'footer/assets/js/plugins.js' %}"></script>
-<script src="{% static 'footer/assets/js/main.js' %}"></script>
+    <script src="{% static 'footer/assets/js/plugins.js' %}"></script>
+    <script src="{% static 'footer/assets/js/main.js' %}"></script>
+
+    {% block extrajs %}{% endblock %}
+
 </body>
 </html>
