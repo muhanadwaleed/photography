@@ -42,7 +42,7 @@ class Collection(View):
 
     def get(self, request):
         profile = Profile.objects.first()
-        images = GallaryImage.objects.all()
+        images = GallaryImage.objects.all().order_by('-date')
         posts = Post.objects.all().order_by('-date')
         categorys = Category.objects.all()
         return render(request, "collection.html", {
@@ -315,6 +315,38 @@ class MessageRead(LoginRequiredMixin, View):
             'profile': profile,
             'messages': messages,
 
+        })
+
+class UploadCollection(LoginRequiredMixin, View):
+    def get(self, request):
+        profile = Profile.objects.first()
+        categoryes = Category.objects.all()
+
+        return render(request, "upload_collection.html", {
+            'main_image': profile.profile_image.url,
+            'profile': profile,
+            'categoryes': categoryes,
+
+        })
+
+    def post(self, request):
+        print('request',request.POST)
+        category = request.POST.get("category")
+        title = request.POST.get("title")
+        images = request.FILES.getlist('images')
+        for image in images:
+            photo = GallaryImage.objects.create(
+                category=Category.objects.get(id=category),
+                title=title,
+                image=image
+            )
+
+        profile = Profile.objects.first()
+        categoryes = Category.objects.all()
+        return render(request, "upload_collection.html", {
+            'main_image': profile.profile_image.url,
+            'profile': profile,
+            'categoryes': categoryes,
         })
 
 

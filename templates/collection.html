@@ -143,39 +143,23 @@
                           <div class="col-lg-12 d-flex justify-content-center">
                             <ul id="portfolio-flters">
                               <li data-filter="*" class="filter-active">All</li>
-                              <li data-filter=".filter-app">App</li>
-                              <li data-filter=".filter-card">Card</li>
-                              <li data-filter=".filter-web">Web</li>
                                 {% for category in categorys %}
                                       <li data-filter=".filter-{{ category.category_name }}" >{{ category.category_name }}</li>
                                 {% endfor %}
-                              <li data-filter=".filter-mohanad">Mohanad</li>
                             </ul>
                           </div>
                         </div>
 
                         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
-                            {% for post in posts %}
+                            {% for post in images %}
                                   <div class="col-lg-4 col-md-6 portfolio-item filter-{{ post.category.category_name }}" id="pic{{ post.id }}">
-                                  {% if post.pic %}
-                                    <div class="portfolio-wrap"style="box-shadow: 0px 5px 7px rgba(34, 25, 25, 0.4); border-radius: 6px; ">
-                                      <img src="{% static  post.pic %} " class="img-fluid" alt="{{ post.title}}">
-                                      <div class="portfolio-links">
-                                        <a href="{% static  post.pic %}" data-gallery="portfolioGallery" class="portfolio-lightbox" title="{{ post.title}}"><i class="bx bx-zoom-in"></i></a>
-                                        <a onclick="copyPiclink('{{ request.get_host }}{{ request.get_full_path }}','#pic{{ post.id }}')"><i class="bx bx-link"></i>
-                                          <span class="tooltiptext" id="myTooltip"></span>
-                                        </a>
-                                      </div>
-                                    </div>
-                            {% else %}
                                     <div class="portfolio-wrap" style="box-shadow: 0px 5px 7px rgba(34, 25, 25, 0.4); border-radius: 6px;">
-                                      <img src="{% static  post.image %}" class="img-fluid" alt="{{ post.title}}">
+                                      <img src=" {{ post.image.url }}" class="img-fluid" alt="{{ post.title}}">
                                       <div class="portfolio-links">
-                                        <a href="{% static  post.image %}" data-gallery="portfolioGallery" class=" portfolio-lightbox" title="{{ post.title}}"><i class="bx bx-zoom-in"></i></a>
+                                        <a href="{{ post.image.url }}" data-gallery="portfolioGallery" class=" portfolio-lightbox" title="{{ post.title}}"><i class="bx bx-zoom-in"></i></a>
                                         <a onclick="copyPiclink('{{ request.get_host }}{{ request.get_full_path }}','#pic{{ post.id }}')"><i class="bx bx-link"></i></a>
                                       </div>
                                     </div>
-                                  {% endif %}
                                   </div>
                             {% endfor %}
                         </div>

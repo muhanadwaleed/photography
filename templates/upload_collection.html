@@ -1,0 +1,61 @@
+{% extends "base.html" %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+{% block page-title %}{{ profile.name }}{% endblock %}
+
+{% block extracss %}
+    <style>
+        .btn.btn-primary {
+            background: {{ profile.color }};
+        }
+        .btn::before {
+            background: unset;
+        }
+
+        .custom-center {
+            justify-content: center;
+             border: solid {{ profile.color }};
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<div id="colorlib-page">
+   <div id="colorlib-main">
+      <section class="ftco-section ftco-bread">
+         <div class="container">
+            <div class="col-md-12 d-flex">
+               <form action="{% url 'Upload-collection' %}" class="bg-light p-5 contact-form" enctype="multipart/form-data" method="Post">
+               {% csrf_token %}
+                  <div class="form-group">
+                     <h1>Upload images</h1>
+                  </div>
+                  <div class="form-group">
+                     <select class="form-select"  name="category" required>
+                        {% for category in categoryes %}
+                        <option value={{ category.id }}>{{ category }}</option>
+                        {% endfor %}
+                     </select>
+                  </div>
+                  <div class="form-group">
+                     <input type="text" name="title" class="form-control" placeholder="title" required>
+                  </div>
+                  <div class="form-group">
+                     <input type="file" name="images" multiple class="form-control">
+                  </div>
+                  <div class="form-group">
+                     <input type="submit" value="Upload" class="btn btn-primary py-3 px-5">
+                  </div>
+               </form>
+            </div>
+         </div>
+      </section>
+   </div>
+   <!-- END COLORLIB-MAIN -->
+</div>
+<!-- END COLORLIB-PAGE -->
+  <!-- loader -->
+
+{% endblock %}

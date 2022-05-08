@@ -164,10 +164,18 @@ class Log(models.Model):
 
 
 class GallaryImage(models.Model):
-    date = models.DateTimeField(auto_now_add=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     title = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
         return self.title
+
+    def pic(self):
+        pic = str(self.image)
+
+        if os.path.exists('static/' + pic.replace('.jpg', '.webp')):
+            return pic.replace('.jpg', '.webp')
+        else:
+            return False

@@ -81,6 +81,8 @@
                         <li {% if 'Message-Read' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Message-Read' %}>Messages</a></li>
                         <li> <a href='{% url 'admin:index' %}'>Admin Dashboard</a></li>
                         <li> <a onclick="SyncInstagram()" style="cursor: pointer;">Sync Instagram</a></li>
+                        <li {% if 'Upload-collection' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Upload-collection' %}>Upload collection</a></li>
+
                     {% endif %}
 				</ul>
 			</nav>
@@ -181,8 +183,8 @@
 <!-- Date Picker -->
     <script src="{% static 'footer/assets/js/gijgo.min.js' %}"></script>
 <!-- Nice-select, sticky -->
-    <script src="{% static 'footer/assets/js/jquery.nice-select.min.js' %}"></script>
-    <script src="{% static 'footer/assets/js/jquery.sticky.js' %}"></script>
+{#    <script src="{% static 'footer/assets/js/jquery.nice-select.min.js' %}"></script>#}
+{#    <script src="{% static 'footer/assets/js/jquery.sticky.js' %}"></script>#}
 <!-- Progress -->
     <script src="{% static 'footer/assets/js/jquery.barfiller.js' %}"></script>
 

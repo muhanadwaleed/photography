@@ -51,6 +51,12 @@
         background: #636363;
         border-radius: 5px;
     }
+      @media (min-width: 767px) {
+          .vid-blog{
+              width: 50% !important;
+          }
+      }
+
 </style>
 {% endblock %}
 
@@ -105,7 +111,7 @@
                                                   {% endif %}
                                                 {% else %}
                                                     {% if  post.videoUrl %}
-                                                        <video class="img img-2" controls style="height:unset;margin-bottom: 40px;">
+                                                        <video class="img img-2 vid-blog" controls style="height:unset;margin-bottom: 40px;">
                                                              {% if post.video %}
                                                                      <source src="{{ post.video.url }}"type="video/mp4">
                                                              {% else %}
