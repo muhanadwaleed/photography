@@ -129,7 +129,7 @@ STATIC_ROOT = BASE_DIR / 'static/'
 
 STATICFILES_DIRS = [
     # BASE_DIR / "static",
-    '/home/mohanad/Desktop/my_website/static/',
+    BASE_DIR / "my_website/static/",
 ]
 
 MEDIA_URL = '/media/'
