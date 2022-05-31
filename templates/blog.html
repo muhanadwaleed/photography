@@ -111,7 +111,7 @@
                                                   {% endif %}
                                                 {% else %}
                                                     {% if  post.videoUrl %}
-                                                        <video class="img img-2 vid-blog" controls style="height:unset;margin-bottom: 40px;">
+                                                        <video class="img img-2 vid-blog"  poster="{% static post.image %}" controls style="height:unset;margin-bottom: 40px;" preload="none">
                                                              {% if post.video %}
                                                                      <source src="{{ post.video.url }}"type="video/mp4">
                                                              {% else %}
@@ -301,6 +301,15 @@
             let requestOptions = {
               method: 'GET'}
               fetch(`/api/archive/?archived=`+archive+'&id='+id,requestOptions)
+                 .then(response => response.json())
+                 .then(result => {
+                     console.log(result)
+                     console.log(result['success'])
+                     if (result['success'] == 'success') {
+                         location.reload()
+                     }
+                 })
+                 .catch(error => console.log('error', error));
         }
 
        async function DeletePost(id) {

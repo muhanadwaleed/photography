@@ -37,6 +37,7 @@ urlpatterns = [
     path('contact/', Contact.as_view(), name='Contact'),
     path('Message-Read/', MessageRead.as_view(), name='Message-Read'),
     path('Upload-collection/', UploadCollection.as_view(), name='Upload-collection'),
+    path('api/Add-Category/<str:category>/', AddCategory.as_view(), name='Add-Category'),
     path('api/send-Message/', Message.as_view(), name='Message'),
     path('api/archive/', Archive.as_view(), name='archive'),
     path('api-post/delete/<int:id>', DeletePost.as_view(), name='delete-post'),

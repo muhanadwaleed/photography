@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% load static %}
+{% extends "base.html" %} {% load static %}{% load thumbnail %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -113,6 +114,10 @@
               visibility: visible;
               opacity: 1;
             }
+            .img-fluid {
+                width: -webkit-fill-available;
+                width: -moz-available;;
+            }
     </style>
 {% endblock %}
 
@@ -152,9 +157,9 @@
 
                         <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
                             {% for post in images %}
-                                  <div class="col-lg-4 col-md-6 portfolio-item filter-{{ post.category.category_name }}" id="pic{{ post.id }}">
+                                  <div class="col-lg-4 col-md-6 portfolio-item filter-{{ post.categoryes.all|join:" filter-"  }}" id="pic{{ post.id }}" >
                                     <div class="portfolio-wrap" style="box-shadow: 0px 5px 7px rgba(34, 25, 25, 0.4); border-radius: 6px;">
-                                      <img src=" {{ post.image.url }}" class="img-fluid" alt="{{ post.title}}">
+                                      <img src=" {{ post.image_thump.url }}" class="img-fluid" alt="{{ post.title}}">
                                       <div class="portfolio-links">
                                         <a href="{{ post.image.url }}" data-gallery="portfolioGallery" class=" portfolio-lightbox" title="{{ post.title}}"><i class="bx bx-zoom-in"></i></a>
                                         <a onclick="copyPiclink('{{ request.get_host }}{{ request.get_full_path }}','#pic{{ post.id }}')"><i class="bx bx-link"></i></a>
@@ -189,8 +194,9 @@
     <script src="{% static 'collection/assets/vendor/swiper/swiper-bundle.min.js' %} "></script>
     <script src="{% static 'collection/assets/vendor/typed.js/typed.min.js' %} "></script>
     <script src="{% static 'collection/assets/vendor/waypoints/noframework.waypoints.js' %} "></script>
-    <script src="{% static 'collection/assets/vendor/php-email-form/validate.js' %} "></script>
-    <script src="{% static 'assets/vendor/php-email-form/validate.js' %} "></script>
+
+{#    <script src="{% static 'collection/assets/vendor/php-email-form/validate.js' %} "></script>#}
+{#    <script src="{% static 'assets/vendor/php-email-form/validate.js' %} "></script>#}
     <script src="{% static 'collection/assets/js/main.js' %} "></script>
 
 {% endblock %}

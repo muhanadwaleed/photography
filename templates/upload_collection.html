@@ -26,14 +26,15 @@
    <div id="colorlib-main">
       <section class="ftco-section ftco-bread">
          <div class="container">
-            <div class="col-md-12 d-flex">
+         <div class="row">
+            <div class="col-md-6 d-flex">
                <form action="{% url 'Upload-collection' %}" class="bg-light p-5 contact-form" enctype="multipart/form-data" method="Post">
                {% csrf_token %}
                   <div class="form-group">
                      <h1>Upload images</h1>
                   </div>
                   <div class="form-group">
-                     <select class="form-select"  name="category" required>
+                     <select class="form-select" multiple name="category" required style="height: unset">
                         {% for category in categoryes %}
                         <option value={{ category.id }}>{{ category }}</option>
                         {% endfor %}
@@ -50,6 +51,20 @@
                   </div>
                </form>
             </div>
+            <div class="col-md-6 d-flex">
+                <div class="bg-light p-5 contact-form">
+                      <div class="form-group">
+                         <h1> Add category </h1>
+                      </div>
+                      <div class="form-group">
+                         <input type="text" id="addcategory" name="addCategory" class="form-control" placeholder="Category" required>
+                      </div>
+                      <div class="form-group">
+                          <button type="button" form="addcategory"  class="btn btn-primary py-3 px-5" onclick="setcategory()">Add Category</button>
+                      </div>
+                </div>
+            </div>
+         </div>
          </div>
       </section>
    </div>
@@ -58,4 +73,24 @@
 <!-- END COLORLIB-PAGE -->
   <!-- loader -->
 
+{% endblock %}
+
+{% block extrajs %}
+ <script>
+    async function setcategory(){
+        let token = $('#token').val();
+        let myHeaders = new Headers();
+        let addCategory = document.getElementById('addcategory').value
+        myHeaders.append("Authorization", `Token ${token}`);
+
+        let requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        await fetch(`/api/Add-Category/${addCategory}/`, requestOptions)
+        location.reload();
+    }
+</script>
 {% endblock %}

@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 from django.views import View
+from sorl.thumbnail.templatetags.thumbnail import is_portrait
 
 from Barghash.models import *
 import time
@@ -44,6 +45,8 @@ class Collection(View):
         profile = Profile.objects.first()
         images = GallaryImage.objects.all().order_by('-date')
         posts = Post.objects.all().order_by('-date')
+
+
         categorys = Category.objects.all()
         return render(request, "collection.html", {
             'main_image': profile.profile_image.url,
@@ -214,7 +217,8 @@ class Archive(LoginRequiredMixin, APIView):
         post = Post.objects.get(id=id)
         post.archive = archive
         post.save()
-
+        success = 'success'
+        return Response({'success': success})
 
 class DeletePost(LoginRequiredMixin, APIView):
     def get(self, request, id):
@@ -317,6 +321,7 @@ class MessageRead(LoginRequiredMixin, View):
 
         })
 
+
 class UploadCollection(LoginRequiredMixin, View):
     def get(self, request):
         profile = Profile.objects.first()
@@ -330,17 +335,31 @@ class UploadCollection(LoginRequiredMixin, View):
         })
 
     def post(self, request):
-        print('request',request.POST)
-        category = request.POST.get("category")
+        print('request', request.POST)
+        category = request.POST.getlist("category")
         title = request.POST.get("title")
         images = request.FILES.getlist('images')
         for image in images:
             photo = GallaryImage.objects.create(
-                category=Category.objects.get(id=category),
                 title=title,
                 image=image
             )
+            for cat in category:
+                photo.categoryes.add(Category.objects.get(id=cat).id)
+            photo.save()
 
+        profile = Profile.objects.first()
+        categoryes = Category.objects.all()
+        return render(request, "upload_collection.html", {
+            'main_image': profile.profile_image.url,
+            'profile': profile,
+            'categoryes': categoryes,
+        })
+
+
+class AddCategory(LoginRequiredMixin, View):
+    def get(self, request, category):
+        new_category = Category.objects.create(category_name=category)
         profile = Profile.objects.first()
         categoryes = Category.objects.all()
         return render(request, "upload_collection.html", {
@@ -365,5 +384,4 @@ class PostAdmin(LoginRequiredMixin, View):
             'Suggested_Articles': random.sample(items, 3),
             'categories': categories,
             'search_text': text,
-
         })
