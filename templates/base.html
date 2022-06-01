@@ -72,9 +72,9 @@
 				<ul>
 					<li {% if '/' in  request.get_full_path %} {% endif %} ><a href={% url 'Home' %}>Home</a></li>
 					<li {% if 'collection' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href="{% url 'Collection' %}">Collection</a></li>
+                    <li {% if 'blog' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href={% url 'Blog' %}>Blog</a></li>
 					<li {% if 'about' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href={% url 'About' %}>About Me</a></li>
 					<li {% if 'services' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href={% url 'Services' %}>My Services</a></li>
-					<li {% if 'blog' in  request.get_full_path %} class="colorlib-active" {% endif %} ><a href={% url 'Blog' %}>Blog</a></li>
 					<li {% if 'contact' in  request.get_full_path %} class="colorlib-active" {% endif %} > <a href={% url 'Contact' %}>Contact</a></li>
                     {% if request.user.is_authenticated %}
                         <h4 class="h2"><span>Admin</span></h4>
