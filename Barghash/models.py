@@ -75,6 +75,10 @@ class Category(models.Model):
         count = Post.objects.filter(category=self.id).count()
         return count
 
+    def countimages(self):
+        count = GallaryImage.objects.filter(categoryes=self.id).count()
+        return count
+
 
 class ContactUs(models.Model):
     address = models.CharField(max_length=1500, null=True, blank=True)

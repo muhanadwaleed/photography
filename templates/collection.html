@@ -149,7 +149,9 @@
                             <ul id="portfolio-flters">
                               <li data-filter="*" class="filter-active">All</li>
                                 {% for category in categorys %}
+                                    {% if category.countimages %}
                                       <li data-filter=".filter-{{ category.category_name }}" >{{ category.category_name }}</li>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                           </div>
