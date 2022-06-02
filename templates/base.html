@@ -59,6 +59,21 @@
             background:#f5f5f5;
             padding:0 10px;
         }
+        .portfolio .portfolio-wrap .portfolio-links a:hover {
+            opacity: 1;
+            background: {{ profile.color }} !important;
+        }
+
+        .portfolio .portfolio-wrap .portfolio-links a {
+            background : {{ profile.color }} !important;
+            opacity: 0.7;
+        }
+        @media (max-width: 767px) {
+            .hero-wrap .text .desc h1.big-letter {
+                font-size: 50px;
+            }
+        }
+
     </style>
 
     {% block head %}{% endblock %}
